@@ -33,17 +33,17 @@ class TejasCaptcha
     /**
      * @var Filesystem
      */
-    protected $files;
+    protected $filesystem;
 
     /**
      * @var Repository
      */
-    protected $config;
+    protected $config_repository;
 
     /**
      * @var ImageManager
      */
-    protected $imageManager;
+    protected $imageManager_fn;
 
     /**
      * @var Session
@@ -53,12 +53,12 @@ class TejasCaptcha
     /**
      * @var Hasher
      */
-    protected $hasher;
+    protected $hasher_fn;
 
     /**
      * @var Str
      */
-    protected $str;
+    protected $str_fn;
 
     /**
      * @var ImageManager->canvas
@@ -93,12 +93,12 @@ class TejasCaptcha
     /**
      * @var int
      */
-    protected $width = 120;
+    protected $width = 200;
 
     /**
      * @var int
      */
-    protected $height = 36;
+    protected $height = 50;
 
     /**
      * @var int
@@ -108,12 +108,17 @@ class TejasCaptcha
     /**
      * @var int
      */
-    protected $lines = 3;
+    protected $lines = 5;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $characters;
+    protected $natural_numbers = ['1', '2', '3', '4', '6', '7', '8', '9'];
+
+    /**
+     * @var array
+     */
+    protected $alpha_characters_no_vowels = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's,' 't', 'v', 'w', 'x', 'y', 'z'];
 
     /**
      * @var array
@@ -180,7 +185,7 @@ class TejasCaptcha
      * Constructor
      *
      * @param Filesystem $files
-     * @param Repository $config
+     * @param Repository $config_repository
      * @param ImageManager $imageManager
      * @param Session $session
      * @param Hasher $hasher
@@ -197,13 +202,12 @@ class TejasCaptcha
         Str $str
     )
     {
-        $this->files = $files;
-        $this->config = $config;
-        $this->imageManager = $imageManager;
+        $this->filesystem = $files;
+        $this->config_repository = $config;
+        $this->imageManager_fn = $imageManager;
         $this->session = $session;
-        $this->hasher = $hasher;
-        $this->str = $str;
-        $this->characters = config('tejascaptcha.characters', ['1', '2', '3', '4', '6', '7', '8', '9']);
+        $this->hasher_fn = $hasher;
+        $this->str_fn = $str;
 
         if (!$this->session->has('captcha_math')) {
             $this->session->put('captcha_math', [
@@ -220,10 +224,10 @@ class TejasCaptcha
      * @param string $config
      * @return void
      */
-    protected function configure($config)
+    protected function configure($config_section)
     {
-        if ($this->config->has('tejascaptcha.' . $config)) {
-            foreach ($this->config->get('tejascaptcha.' . $config) as $key => $val) {
+        if ($this->config_repository->has('tejascaptcha.' . $config_section)) {
+            foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
                 $this->{$key} = $val;
             }
         }
@@ -234,12 +238,12 @@ class TejasCaptcha
      *
      * @param string $config
      * @param boolean $api
-     * @return ImageManager->response
+     * @return imageManager->response
      */
-    public function create($config = 'default', $api = false)
+    public function create($config_section = 'default', $api = false)
     {
-        $this->backgrounds = $this->files->files(__DIR__ . '/../assets/backgrounds');
-        $this->fonts = $this->files->files(__DIR__ . '/../assets/fonts');
+        $this->backgrounds = $this->filesystem->files(__DIR__ . '/../assets/backgrounds');
+        $this->fonts = $this->filesystem->files(__DIR__ . '/../assets/fonts');
 
         if (app()->version() >= 5.5) {
             $this->fonts = array_map(function ($file) {
@@ -249,7 +253,7 @@ class TejasCaptcha
 
         $this->fonts = array_values($this->fonts); //reset fonts array index
 
-        $this->configure($config);
+        $this->configure($config_section);
 
         if($this->math_generated) {
             $this->math_generated = 0;
@@ -265,14 +269,14 @@ class TejasCaptcha
         $generator = $this->generate();
         $this->text = $generator['value'];
 
-        $this->canvas = $this->imageManager->canvas(
+        $this->canvas = $this->imageManager_fn->canvas(
             $this->width,
             $this->height,
             $this->bgColor
         );
 
         if ($this->bgImage) {
-            $this->image = $this->imageManager->make($this->background())->resize(
+            $this->image = $this->imageManager_fn->make($this->background())->resize(
                 $this->width,
                 $this->height
             );
@@ -323,7 +327,6 @@ class TejasCaptcha
      */
     protected function generate()
     {
-        $characters = is_string($this->characters) ? str_split($this->characters) : $this->characters;
 
         $bag = [];
         $key = '';
@@ -335,14 +338,21 @@ class TejasCaptcha
             $key = $x + $y;
             $key .= '';
         } else {
+            $all_characters_no_vowels = array_merge($this->alpha_characters_no_vowels, $this->natural_numbers);
+
             for ($i = 0; $i < $this->length; $i++) {
-                $char = $characters[random_int(0, count($characters) - 1)];
-                $bag[] = $this->sensitive ? $char : $this->str->lower($char);
+                $character_index = random_int(0, count($all_characters_no_vowels) - 1);
+                $char = $all_characters_no_vowels[$character_index];
+                if(is_numeric($char)) {
+                    $bag[] = $char;
+                }else{
+                    $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($char) : $char) : $char;
+                }
             }
             $key = implode('', $bag);
         }
 
-        $hash = $this->hasher->make($key);
+        $hash = $this->hasher_fn->make($key);
         $this->session->put('tejascaptcha', [
             'sensitive' => $this->sensitive,
             'key' => $hash
@@ -360,27 +370,26 @@ class TejasCaptcha
      */
     protected function text()
     {
-        $marginTop = $this->image->height() / $this->length;
+          if (is_string($this->text)) {
 
-        $text = $this->text;
+            $text = $this->text;
+            $this->length = ($this->math)? strlen($text) : $this->length;
+            $marginTop = $this->image->height() / $this->length;
 
-        $this->length = ($this->math)? strlen($text) : $this->length;
-
-        if (is_string($text)) {
             $text = str_split($text);
-        }
 
-        foreach ($text as $key => $char) {
-            $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);
+            foreach ($text as $key => $char) {
+                $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);
 
-            $this->image->text($char, $marginLeft, $marginTop, function ($font) {
-                $font->file($this->font());
-                $font->size($this->fontSize());
-                $font->color($this->fontColor());
-                $font->align('left');
-                $font->valign('top');
-                $font->angle($this->angle());
-            });
+                $this->image->text($char, $marginLeft, $marginTop, function ($font) {
+                    $font->file($this->font());
+                    $font->size($this->fontSize());
+                    $font->color($this->fontColor());
+                    $font->align('left');
+                    $font->valign('top');
+                    $font->angle($this->angle());
+                });
+            }
         }
     }
 
@@ -468,10 +477,10 @@ class TejasCaptcha
         $sensitive = $this->session->get('tejascaptcha.sensitive');
 
         if (!$sensitive) {
-            $value = $this->str->lower($value);
+            $value = $this->str_fn->lower($value);
         }
 
-        $check = $this->hasher->check($value, $key);
+        $check = $this->hasher_fn->check($value, $key);
         //  if verify pass,remove session
         if ($check) {
             $this->session->remove('tejascaptcha');
@@ -488,7 +497,7 @@ class TejasCaptcha
      */
     public function check_api($value, $key)
     {
-        return $this->hasher->check($value, $key);
+        return $this->hasher_fn->check($value, $key);
     }
 
     /**
@@ -499,7 +508,7 @@ class TejasCaptcha
      */
     public function src($config = null)
     {
-        return url('tejascaptcha' . ($config ? '/' . $config : '/default')) . '?' . $this->str->random(8);
+        return url('tejascaptcha' . ($config ? '/' . $config : '/default')) . '?' . $this->str_fn->random(8);
     }
 
     /**
@@ -512,7 +521,7 @@ class TejasCaptcha
     {
       foreach ($attrs as $attr => $value) {
           if ($attr == 'src') {
-              $attrs ['src'] = url('tejascaptcha') . "?" . $this->str->random();
+              $attrs ['src'] = url('tejascaptcha') . "?" . $this->str_fn->random();
           }
           if ($attr == 'alt') {
             // this never gets to the Dom if the provided jquery ajax is used
@@ -559,7 +568,7 @@ class TejasCaptcha
           }
           $attrs_str .= $attr . "='" . $value . "'";
       }
-      $attrs_str .= ' src=' . "'" . url('tejascaptcha') . "?" . $this->str->random() . "'";
+      $attrs_str .= ' src=' . "'" . url('tejascaptcha') . "?" . $this->str_fn->random() . "'";
       return new HtmlString(trim($attrs_str));
     }
 
