@@ -118,7 +118,7 @@ class TejasCaptcha
     /**
      * @var array
      */
-    protected $alpha_characters_no_vowels = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's,' 't', 'v', 'w', 'x', 'y', 'z'];
+    protected $alpha_characters_no_vowels = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'];
 
     /**
      * @var array
