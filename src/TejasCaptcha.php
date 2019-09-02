@@ -214,9 +214,9 @@ class TejasCaptcha
                 'math' => 0,
                 'math_generated' => 0,
                 'oldx' => 0,
-                'min_color' => 0,
-                'max_color' => 172,
-                'color_threshold' => 96
+                'min_color' => 64,
+                'max_color' => 200,
+                'color_threshhold' => 128
             ]);
         }
 
@@ -334,14 +334,14 @@ class TejasCaptcha
       $bag = [];
       $key = '';
       $all_characters_no_vowels = Array();
-      $x = $oldx = $this->session->get('tejas_captcha_vars["oldx"]');
+      $x = $oldx = $this->session->get('tejas_captcha_vars.oldx');
 
       if ($this->math) {
           while($oldx == $x) {
               $x = random_int(10, 30);
               $y = random_int(1, 9);
           }
-          $this->session->put('tejas_captcha_vars["oldx"]', $x);
+          $this->session->put('tejas_captcha_vars.oldx', $x);
 
           $bag = "$x + $y = ";
           $key = $x + $y;
@@ -430,18 +430,18 @@ class TejasCaptcha
      */
     protected function fontColor()
     {
-        $min_color = $this->session->get('tejas_captcha_vars["min_color"]');
-        $max_color = $this->session->get('tejas_captcha_vars["max_color"]');
-        $color_threshold = $this->session->get('tejas_captcha_vars["color_threshold"]');
+        $min_color = $this->session->get('tejas_captcha_vars.min_color');
+        $max_color = $this->session->get('tejas_captcha_vars.max_color');
+        $color_threshhold = $this->session->get('tejas_captcha_vars.color_threshhold');
 
         $red = 255;
         $blue = 255;
         $green = 255;
-        
+
         if (!empty($this->fontColors)) {
             $color = $this->fontColors[random_int(0, count($this->fontColors) - 1)];
         } else {
-            while( $red >= $color_threshold && $green >= $color_threshold && $blue >= $color_threshold ) {
+            while( $red >= $color_threshhold && $green >= $color_threshhold && $blue >= $color_threshhold ) {
               $red = random_int($min_color, $max_color);
               $blue = random_int($min_color, $max_color);
               $green = random_int($min_color, $max_color);
