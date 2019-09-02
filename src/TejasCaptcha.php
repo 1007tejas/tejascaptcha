@@ -209,16 +209,19 @@ class TejasCaptcha
         $this->hasher_fn = $hasher;
         $this->str_fn = $str;
 
-        if (!$this->session->has('captcha_math')) {
-            $this->session->put('captcha_math', [
+        if (!$this->session->has('tejas_captcha_vars')) {
+            $this->session->put('tejas_captcha_vars', [
                 'math' => 0,
                 'math_generated' => 0,
-                'oldx' => 0
+                'oldx' => 0,
+                'min_color' => 0,
+                'max_color' => 172,
+                'color_threshold' => 96
             ]);
         }
 
-        $this->math = $this->session->get('captcha_math.math');
-        $this->math_generated = $this->session->get('captcha_math.math_generated');
+        $this->math = $this->session->get('tejas_captcha_vars.math');
+        $this->math_generated = $this->session->get('tejas_captcha_vars.math_generated');
     }
 
     /**
@@ -260,10 +263,10 @@ class TejasCaptcha
             $this->math_generated = 0;
         } else {
             $this->math = ( random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? 1 : 0;
-            $this->session->put('captcha_math.math', $this->math);
+            $this->session->put('tejas_captcha_vars.math', $this->math);
             $this->math_generated = 1;
         }
-        $this->session->put('captcha_math.math_generated', $this->math_generated);
+        $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
         // Log::debug('create: $math: '.$this->math.' $math_generated: '.$this->math_generated);
 
@@ -331,14 +334,14 @@ class TejasCaptcha
       $bag = [];
       $key = '';
       $all_characters_no_vowels = Array();
-      $x = $oldx = $this->session->get('captcha_math["oldx"]');
+      $x = $oldx = $this->session->get('tejas_captcha_vars["oldx"]');
 
       if ($this->math) {
           while($oldx == $x) {
               $x = random_int(10, 30);
               $y = random_int(1, 9);
           }
-          $this->session->put('captcha_math["oldx"]', $x);
+          $this->session->put('tejas_captcha_vars["oldx"]', $x);
 
           $bag = "$x + $y = ";
           $key = $x + $y;
@@ -427,10 +430,23 @@ class TejasCaptcha
      */
     protected function fontColor()
     {
+        $min_color = $this->session->get('tejas_captcha_vars["min_color"]');
+        $max_color = $this->session->get('tejas_captcha_vars["max_color"]');
+        $color_threshold = $this->session->get('tejas_captcha_vars["color_threshold"]');
+
+        $red = 255;
+        $blue = 255;
+        $green = 255;
+        
         if (!empty($this->fontColors)) {
             $color = $this->fontColors[random_int(0, count($this->fontColors) - 1)];
         } else {
-            $color = [random_int(0, 255), random_int(0, 255), random_int(0, 255)];
+            while( $red >= $color_threshold && $green >= $color_threshold && $blue >= $color_threshold ) {
+              $red = random_int($min_color, $max_color);
+              $blue = random_int($min_color, $max_color);
+              $green = random_int($min_color, $max_color);
+            }
+            $color = [$red, $green, $blue];
         }
 
         return $color;
@@ -537,8 +553,8 @@ class TejasCaptcha
               $attrs['alt'] = $this->math;
               $this->math_generated = 1;
 
-              $this->session->put('captcha_math.math', $this->math);
-              $this->session->put('captcha_math.math_generated', $this->math_generated);
+              $this->session->put('tejas_captcha_vars.math', $this->math);
+              $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
               // Log::debug('tejas_captcha_image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
           }
@@ -568,8 +584,8 @@ class TejasCaptcha
               $value = '';
               $this->math_generated = 1;
 
-              $this->session->put('captcha_math.math', $this->math);
-              $this->session->put('captcha_math.math_generated', $this->math_generated);
+              $this->session->put('tejas_captcha_vars.math', $this->math);
+              $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
               // Log::debug('tejas_captcha_image-onPageLoad: $math: '.$this->math.' $math_generated: '.$this->math_generated);
           }
