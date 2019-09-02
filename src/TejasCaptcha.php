@@ -212,7 +212,8 @@ class TejasCaptcha
         if (!$this->session->has('captcha_math')) {
             $this->session->put('captcha_math', [
                 'math' => 0,
-                'math_generated' => 0
+                'math_generated' => 0,
+                'oldx' => 0
             ]);
         }
 
@@ -327,36 +328,42 @@ class TejasCaptcha
      */
     protected function generate()
     {
+      $bag = [];
+      $key = '';
+      $all_characters_no_vowels = Array();
+      $x = $oldx = $this->session->get('captcha_math["oldx"]');
 
-        $bag = [];
-        $key = '';
+      if ($this->math) {
+          while($oldx == $x) {
+              $x = random_int(10, 30);
+              $y = random_int(1, 9);
+          }
+          $this->session->put('captcha_math["oldx"]', $x);
 
-        if ($this->math) {
-            $x = random_int(10, 30);
-            $y = random_int(1, 9);
-            $bag = "$x + $y = ";
-            $key = $x + $y;
-            $key .= '';
-        } else {
-            $all_characters_no_vowels = array_merge($this->alpha_characters_no_vowels, $this->natural_numbers);
+          $bag = "$x + $y = ";
+          $key = $x + $y;
+          $key .= '';
+      } else {
+          $all_characters_no_vowels = array_merge($this->alpha_characters_no_vowels, $this->natural_numbers);
+          for ($i = 0; $i < $this->length; $i++) {
+              $character_index = random_int(0, count($all_characters_no_vowels) - 1);
+              $charone = $all_characters_no_vowels[$character_index];
 
-            for ($i = 0; $i < $this->length; $i++) {
-                $character_index = random_int(0, count($all_characters_no_vowels) - 1);
-                $char = $all_characters_no_vowels[$character_index];
-                if(is_numeric($char)) {
-                    $bag[] = $char;
-                }else{
-                    $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($char) : $char) : $char;
-                }
-            }
-            $key = implode('', $bag);
-        }
+              if(is_numeric($charone)) {
+                  $bag[] = $charone;
+              }else{
+                  $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($charone) : $charone) : $charone;
+              }
+          }
+          $key = $bag = implode('', $bag);
+      }
 
-        $hash = $this->hasher_fn->make($key);
-        $this->session->put('tejascaptcha', [
-            'sensitive' => $this->sensitive,
-            'key' => $hash
-        ]);
+      $hash = $this->hasher_fn->make($key);
+
+      $this->session->put('tejascaptcha', [
+          'sensitive' => $this->sensitive,
+          'key' => $hash
+      ]);
 
         return [
             'value' => $bag,
@@ -378,10 +385,10 @@ class TejasCaptcha
 
             $text = str_split($text);
 
-            foreach ($text as $key => $char) {
+            foreach ($text as $key => $charone) {
                 $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);
 
-                $this->image->text($char, $marginLeft, $marginTop, function ($font) {
+                $this->image->text($charone, $marginLeft, $marginTop, function ($font) {
                     $font->file($this->font());
                     $font->size($this->fontSize());
                     $font->color($this->fontColor());
