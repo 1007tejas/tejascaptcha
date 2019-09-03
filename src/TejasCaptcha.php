@@ -350,12 +350,12 @@ class TejasCaptcha
           $all_characters_no_vowels = array_merge($this->alpha_characters_no_vowels, $this->natural_numbers);
           for ($i = 0; $i < $this->length; $i++) {
               $character_index = random_int(0, count($all_characters_no_vowels) - 1);
-              $charone = $all_characters_no_vowels[$character_index];
+              $onechar = $all_characters_no_vowels[$character_index];
 
-              if(is_numeric($charone)) {
-                  $bag[] = $charone;
+              if(is_numeric($onechar)) {
+                  $bag[] = $onechar;
               }else{
-                  $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($charone) : $charone) : $charone;
+                  $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($onechar) : $onechar) : $onechar;
               }
           }
           $key = $bag = implode('', $bag);
@@ -382,25 +382,27 @@ class TejasCaptcha
     {
           if (is_string($this->text)) {
 
-            $text = $this->text;
-            $this->length = ($this->math)? strlen($text) : $this->length;
-            $marginTop = $this->image->height() / $this->length;
+                $text = $this->text;
 
-            $text = str_split($text);
+                $this->length = ($this->math)? strlen($text) : $this->length;
+                $marginTop = $this->image->height() / $this->length;
 
-            foreach ($text as $key => $charone) {
-                $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);
+                $text = str_split($text);
 
-                $this->image->text($charone, $marginLeft, $marginTop, function ($font) {
-                    $font->file($this->font());
-                    $font->size($this->fontSize());
-                    $font->color($this->fontColor());
-                    $font->align('left');
-                    $font->valign('top');
-                    $font->angle($this->angle());
-                });
-            }
-        }
+                foreach ($text as $key => $onechar) {
+                    $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);
+
+                    $this->image->text($onechar, $marginLeft, $marginTop, function ($font) {
+                        $font->file($this->font());
+                        $font->size($this->fontSize());
+                        $font->color($this->fontColor());
+                        $font->align('left');
+                        $font->valign('top');
+                        $font->angle($this->angle());
+                    });
+                }
+          }
+          $text = $this->text = null;
     }
 
     /**

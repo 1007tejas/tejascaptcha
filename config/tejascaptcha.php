@@ -6,8 +6,8 @@ return [
         'width' => 200,
         'height' => 50,
         'quality' => 90,
+        'sensitive' => false,
     ],
-
     'flat' => [
         'length' => 5,
         'width' => 200,
