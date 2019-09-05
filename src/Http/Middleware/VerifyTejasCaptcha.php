@@ -72,7 +72,7 @@ class VerifyTejasCaptcha
         if($this->verifyTejasCaptcha){
             $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
             if ( !$value || !$this->verifyCaptcha($value) ) {
-                throw new TokenMismatchException('Tejas Captcha mismatch.');
+                throw new VerifyTejasCaptchaException('Tejas Captcha mismatch.');
             }
         }
         return $next($request);
