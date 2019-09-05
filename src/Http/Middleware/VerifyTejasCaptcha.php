@@ -96,12 +96,12 @@ class VerifyTejasCaptcha
      */
     public function verifyCaptcha($value)
     {
-        if (!$this->session->has('tejas_captcha_vars')) {
+        if (!$this->session->has('tejas_captcha_params')) {
             return false;
         }
 
-        $key = $this->session->get('tejas_captcha_vars.key');
-        $sensitive = $this->session->get('tejas_captcha_vars.sensitive');
+        $key = $this->session->get('tejas_captcha_params.key');
+        $sensitive = $this->session->get('tejas_captcha_params.sensitive');
 
         if (!$sensitive) {
             $value = $this->str_fn->lower($value);
@@ -110,7 +110,7 @@ class VerifyTejasCaptcha
         $check = $this->hasher_fn->check($value, $key);
         //  if verify pass,remove session
         if ($check) {
-            $this->session->remove('tejas_captcha_vars');
+            $this->session->remove('tejas_captcha_params');
         }
 
         return $check;
