@@ -3,7 +3,6 @@
 namespace Tejas\TejasCaptcha\Http\Middleware;
 
 use Closure;
-use Exception;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\Facades\Log;
@@ -55,7 +54,6 @@ class VerifyTejasCaptcha
      * @param Session $session
      * @param Str $str
      * @param Hasher $hasher
-     * @throws Exception
      */
 
     public function __construct(
@@ -82,7 +80,7 @@ class VerifyTejasCaptcha
             $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
 
             if ( !$value || !$this->verifyCaptcha($value) ) {
-                throw new VerifyTejasCaptchaException('Tejas Captcha mismatch.');
+                 redirect()->action('MCHBA_Controller@postContactErrorCreate');
             }
         }
         return $next($request);
