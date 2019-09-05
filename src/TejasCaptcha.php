@@ -230,8 +230,8 @@ class TejasCaptcha
      */
     protected function configure($config_section)
     {
-        if ($this->config_repository->has('tejascaptcha.' . $config_section)) {
-            foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
+        if ($this->config_repository->has('tejas_captcha_vars.' . $config_section)) {
+            foreach ($this->config_repository->get('tejas_captcha_vars.' . $config_section) as $key => $val) {
                 $this->{$key} = $val;
             }
         }
@@ -363,7 +363,7 @@ class TejasCaptcha
 
       $hash = $this->hasher_fn->make($key);
 
-      $this->session->put('tejascaptcha', [
+      $this->session->put('tejas_captcha_vars', [
           'sensitive' => $this->sensitive,
           'key' => $hash
       ]);
@@ -494,12 +494,12 @@ class TejasCaptcha
      */
     public function check($value)
     {
-        if (!$this->session->has('tejascaptcha')) {
+        if (!$this->session->has('tejas_captcha_vars')) {
             return false;
         }
 
-        $key = $this->session->get('tejascaptcha.key');
-        $sensitive = $this->session->get('tejascaptcha.sensitive');
+        $key = $this->session->get('tejas_captcha_vars.key');
+        $sensitive = $this->session->get('tejas_captcha_vars.sensitive');
 
         if (!$sensitive) {
             $value = $this->str_fn->lower($value);
@@ -508,7 +508,7 @@ class TejasCaptcha
         $check = $this->hasher_fn->check($value, $key);
         //  if verify pass,remove session
         if ($check) {
-            $this->session->remove('tejascaptcha');
+            $this->session->remove('tejas_captcha_vars');
         }
 
         return $check;
