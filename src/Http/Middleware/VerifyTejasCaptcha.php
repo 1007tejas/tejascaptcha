@@ -69,9 +69,9 @@ class VerifyTejasCaptcha
      */
     public function handle($request, Closure $next)
     {
-        if($verifyTejasCaptcha){
+        if($this->verifyTejasCaptcha){
             $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
-            if ( !$value || !$this->verifyCaptcha($request) ) {
+            if ( !$value || !$this->verifyCaptcha($value) ) {
                 throw new TokenMismatchException('Tejas Captcha mismatch.');
             }
         }
