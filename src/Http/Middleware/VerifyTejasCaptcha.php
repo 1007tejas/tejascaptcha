@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Laravel 5 TejasCaptcha package
@@ -38,6 +39,11 @@ class VerifyTejasCaptcha
     protected $hasher_fn;
 
     /**
+     * @var Str
+     */
+    protected $str_fn;
+
+    /**
      * @var bool
      */
     protected $verifyTejasCaptcha = true;
@@ -47,17 +53,20 @@ class VerifyTejasCaptcha
      * Constructor
      *
      * @param Session $session
+     * @param Str $str
      * @param Hasher $hasher
      * @throws Exception
      */
 
     public function __construct(
         Session $session,
-        Hasher $hasher
+        Hasher $hasher,
+        Str $str
     )
     {
         $this->session = $session;
         $this->hasher_fn = $hasher;
+        $this->str_fn = $str;
     }
 
     /**
