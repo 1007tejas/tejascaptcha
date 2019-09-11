@@ -133,13 +133,13 @@ return [
         if(response) {
             if(response['alt'] == 1) {
                 $('#captchaImageLabel').html('Enter the Answer');
-                $('#captchaImageInput').attr({placeholder:
+                $('#captcha_response').attr({placeholder:
                                                'Enter Answer for the Math Problem (required)',  
                                              title:
                                                'Enter the Answer to the TejasCaptcha Math Problem required' });
             } else if(response['alt'] == 0) {
                 $('#captchaImageLabel').html('Enter the TejasCaptcha');
-                $('#captchaImageInput').attr({placeholder:
+                $('#captcha_response').attr({placeholder:
                                                'Enter the TejasCaptcha Code (required)',
                                              title:
                                                'Enter the TejasCaptcha Code required' });
@@ -210,7 +210,7 @@ return [
                                                    ['class'=>'popup-menu-label mews-credit col-sm-12'])!!}
 </div>
 <div class="row md-bot-pad">
-  {!! Form::text('tejascaptcha-response', '', ['id' => 'captchaImageInput',
+  {!! Form::text('tejascaptcha-response', '', ['id' => 'captcha_response',
     'placeholder' => 'Enter TejasCaptcha or Answer Math Problem  (required)',
     'class' => 'menu-label-input col-sm-12', 'data-toggle' => 'tooltip',
     'title' => 'Text Input Enter TejasCaptcha or Answer Math Problem']) !!}

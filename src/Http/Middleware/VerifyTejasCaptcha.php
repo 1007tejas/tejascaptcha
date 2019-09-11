@@ -7,6 +7,7 @@ use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use \Illuminate\Http\Request;
 
 /**
  * Laravel 5 TejasCaptcha package
@@ -47,7 +48,6 @@ class VerifyTejasCaptcha
      */
     protected $verifyTejasCaptcha = true;
 
-
     /**
      * Constructor
      *
@@ -56,12 +56,7 @@ class VerifyTejasCaptcha
      * @param Hasher $hasher
      */
 
-    public function __construct(
-        Session $session,
-        Hasher $hasher,
-        Str $str
-    )
-    {
+    public function __construct( Session $session, Hasher $hasher, Str $str ) {
         $this->session = $session;
         $this->hasher_fn = $hasher;
         $this->str_fn = $str;
@@ -74,17 +69,21 @@ class VerifyTejasCaptcha
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+     public function handle($request, Closure $next)
+      {
         if($this->verifyTejasCaptcha){
-            $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
 
-            if ( !$value || !$this->verifyCaptcha($value) ) {
-                 redirect()->action('MCHBA_Controller@postContactErrorCreate');
-            }
-        }
-        return $next($request);
-    }
+              $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
+              if ( !$value || !$this->verifyCaptcha($value) ) {
+                  $data = [ 'errors' => ['captcha_response' => ['Incorrect Captcha Response']], 'captcha_response' => '' ];
+                  $request->merge($data);
+              }
+          }
+
+          return $next($request);
+
+      }
+
 
     /**
      * TejasCaptcha check

@@ -3,14 +3,14 @@
 return [
     'default' => [
         'length' => 5,
-        'width' => 200,
+        'width' => 230,
         'height' => 50,
         'quality' => 90,
         'sensitive' => false,
     ],
     'flat' => [
         'length' => 5,
-        'width' => 200,
+        'width' => 230,
         'height' => 50,
         'quality' => 90,
         'lines' => 6,

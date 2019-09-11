@@ -93,7 +93,7 @@ class TejasCaptcha
     /**
      * @var int
      */
-    protected $width = 200;
+    protected $width = 230;
 
     /**
      * @var int
