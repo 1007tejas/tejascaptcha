@@ -1,6 +1,6 @@
 # !/usr/bin/python3
 
-import os, getopt, sys
+import os, getopt, sys, shlex, subprocess
 
 def usage():
     print('Currently accepting 2 arguements, [-d, --data] and [-h, --help]')
@@ -27,9 +27,12 @@ def main():
         print('What is?', file=f)
         f.close()
 
-    with open('/var/www/dev.173.255.195.42/resources/audio/final.mp3', 'r') as f:
-        print('from file: ' + f.read())
-        f.close()
+
+    command_line = 'ffmpeg -safe 0  -f concat -i audio/text/konkat -c copy /var/www/dev.173.255.195.42/resources/audio/final.mp3'
+    args = shlex.split(command_line)
+    print(args)
+    p = subprocess.Popen(args) # Success!
+
 
 if __name__ == "__main__":
     main()
