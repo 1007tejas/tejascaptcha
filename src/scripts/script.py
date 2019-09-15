@@ -1,6 +1,9 @@
 # !/usr/bin/python3
 
-import getopt, sys
+import os, getopt, sys
+
+def usage():
+    print('Currently accepting 2 arguements, [-d, --data] and [-h, --help]')
 
 def main():
     try:
@@ -20,7 +23,13 @@ def main():
         else:
             assert False, "unhandled option"
 
-    print(data)
+    with open('/var/www/dev.173.255.195.42/resources/audio/final.mp3', 'w+') as f:
+        print('What is?', file=f)
+        f.close()
+
+    with open('/var/www/dev.173.255.195.42/resources/audio/final.mp3', 'r') as f:
+        print('from file: ' + f.read())
+        f.close()
 
 if __name__ == "__main__":
     main()

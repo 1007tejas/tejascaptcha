@@ -12,17 +12,6 @@ if (!function_exists('TejasCaptcha')) {
     }
 }
 
-if (!function_exists('captcha_src')) {
-    /**
-     * @param string $config
-     * @return string
-     */
-    function captcha_src($config = 'default')
-    {
-        return app('tejascaptcha')->src($config);
-    }
-}
-
 if (!function_exists('tejas_captcha_image_initialPageLoad')) {
     /**
      * @param null $attrs
@@ -45,36 +34,14 @@ if (!function_exists('tejas_captcha_image_ajaxRequest')) {
     }
 }
 
-if (!function_exists('captcha_img')) {
+if (!function_exists('tejas_captcha_audio_ajaxRequest')) {
 
     /**
      * @param string $config
      * @return mixed
      */
-    function captcha_img($config = 'default')
+    function tejas_captcha_audio_ajaxRequest($config = 'default')
     {
-        return app('tejascaptcha')->img($config);
-    }
-}
-
-if (!function_exists('captcha_check')) {
-    /**
-     * @param $value
-     * @return bool
-     */
-    function captcha_check($value)
-    {
-        return app('tejascaptcha')->check($value);
-    }
-}
-
-if (!function_exists('captcha_api_check')) {
-    /**
-     * @param $value
-     * @return bool
-     */
-    function captcha_api_check($value, $key)
-    {
-        return app('tejascaptcha')->check_api($value, $key);
+        return app('tejas_captcha_audio_ajaxRequest')->img($config);
     }
 }

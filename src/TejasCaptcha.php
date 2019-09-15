@@ -24,6 +24,8 @@ use Intervention\Image\ImageManager;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 /**
  * Class TejasCaptcha
  * @package TejasCaptcha
@@ -559,6 +561,18 @@ class TejasCaptcha
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
               // Log::debug('tejas_captcha_image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
+
+
+              $text = ' -d "12 + 4 ="';
+              $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
+              $process->run();
+              // executes after the command finishes
+              if (!$process->isSuccessful()) {
+                  throw new ProcessFailedException($process);
+              }else{
+                dd( $process->getOutput());
+              }
+
           }
       }
       return json_encode($attrs);
@@ -595,27 +609,5 @@ class TejasCaptcha
       }
       $attrs_str .= ' src=' . "'" . url('tejascaptcha') . "?" . $this->str_fn->random() . "'";
       return new HtmlString(trim($attrs_str));
-    }
-
-    /**
-     * Generate tejascaptcha image html tag
-     *
-     * @param null $config
-     * @param array $attrs HTML attributes supplied to the image tag where key is the attribute
-     * and the value is the attribute value
-     * @return string
-     */
-    public function img($config = null, $attrs = [])
-    {
-        $attrs_str = '';
-        foreach ($attrs as $attr => $value) {
-            if ($attr == 'src') {
-                //Neglect src attribute
-                continue;
-            }
-
-            $attrs_str .= $attr . '="' . $value . '" ';
-        }
-        return new HtmlString('<img src="' . $this->src($config) . '" ' . trim($attrs_str) . '>');
     }
 }
