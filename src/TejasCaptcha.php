@@ -370,11 +370,21 @@ class TejasCaptcha
           'key' => $hash
       ]);
 
-        return [
-            'value' => $bag,
-            'sensitive' => $this->sensitive,
-            'key' => $hash
-        ];
+      $text = ' -d '.$key;
+      $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
+      $process->run();
+      // executes after the command finishes
+      if (!$process->isSuccessful()) {
+          throw new ProcessFailedException($process);
+      }else{
+        dd( $process->getOutput());
+      }
+
+      return [
+          'value' => $bag,
+          'sensitive' => $this->sensitive,
+          'key' => $hash
+      ];
     }
 
     /**
@@ -561,17 +571,6 @@ class TejasCaptcha
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
               // Log::debug('tejas_captcha_image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
-
-
-              $text = ' -d "12 + 4 ="';
-              $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
-              $process->run();
-              // executes after the command finishes
-              if (!$process->isSuccessful()) {
-                  throw new ProcessFailedException($process);
-              }else{
-                dd( $process->getOutput());
-              }
 
           }
       }
