@@ -12,10 +12,10 @@ def doCommand(command_line):
     # response.check_returncode()
 
 def createAudio(**audioText):
-    doCommand('espeak -m \'' + str(audioText['audio1']) + '\' -s 140 -p 65 -v mb-us1 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio1.wav')
-    doCommand('espeak -m \'' + str(audioText['audio2']) + '\' -s 140 -p 65 -v mb-us1 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio2.wav')
-    doCommand('espeak -m \'' + str(audioText['audio3']) + '\' -s 140 -p 65 -v mb-us1 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio3.wav')
-    doCommand('espeak -m \'' + str(audioText['audio4']) + '\' -s 110 -p 65 -v mb-us1 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audioData.wav')
+    doCommand('espeak -m \'' + str(audioText['audio1']) + '\' -s 140 -p 65 -v mb-us3 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio1.wav')
+    doCommand('espeak -m \'' + str(audioText['audio2']) + '\' -s 140 -p 65 -v mb-us3 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio2.wav')
+    doCommand('espeak -m \'' + str(audioText['audio3']) + '\' -s 140 -p 65 -v mb-us3 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio3.wav')
+    doCommand('espeak -m \'' + str(audioText['audio4']) + '\' -s 110 -p 65 -v mb-us3 -w /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audioData.wav')
 
 def usage():
     print('Currently accepting 2 arguements, [-d, --data] and [-h, --help]')
