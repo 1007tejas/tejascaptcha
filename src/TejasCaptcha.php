@@ -345,7 +345,7 @@ class TejasCaptcha
           }
           $this->session->put('tejas_captcha_vars.oldx', $x);
 
-          $bag = "$x + $y = ";
+          $tts = $bag = "$x + $y = ";
           $key = $x + $y;
           $key .= '';
       } else {
@@ -360,7 +360,7 @@ class TejasCaptcha
                   $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($onechar) : $onechar) : $onechar;
               }
           }
-          $key = $bag = implode('', $bag);
+          $tts = $key = $bag = implode('', $bag);
       }
 
       $hash = $this->hasher_fn->make($key);
@@ -370,15 +370,17 @@ class TejasCaptcha
           'key' => $hash
       ]);
 
-      $text = ' -d '.$key;
+      $tts = preg_replace('/\s+/', '', $tts);
+      $text = "-d $tts";
       $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
       $process->run();
       // executes after the command finishes
       if (!$process->isSuccessful()) {
           throw new ProcessFailedException($process);
-      }else{
-        dd( $process->getOutput());
       }
+      // else{
+      //   dd( $process->getOutput());
+      // }
 
       return [
           'value' => $bag,
