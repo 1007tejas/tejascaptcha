@@ -3,8 +3,10 @@
 namespace Tejas\TejasCaptcha;
 
 use Illuminate\Support\ServiceProvider;
+use Session;
+use Sessions\TejasCaptchaSession;
 
-/**
+/**Tejas\TejasCaptcha\TejasCaptchaServiceProvider
  * Class TejasCaptchaServiceProvider
  * @package TejasCaptcha
  */
@@ -48,6 +50,11 @@ class TejasCaptchaServiceProvider extends ServiceProvider
         // Validator extensions
         $this->app['validator']->extend('captcha_api', function ($attribute, $value, $parameters) {
             return captcha_api_check($value, $parameters[0]);
+        });
+
+        Session::extend('TejasCaptchaSession', function ($app) {
+            // Return implementation of SessionHandlerInterface...
+            return new TejasCaptchaSession;
         });
 
     }

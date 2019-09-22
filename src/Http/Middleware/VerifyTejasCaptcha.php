@@ -79,11 +79,8 @@ class VerifyTejasCaptcha
                   $request->merge($data);
               }
           }
-
           return $next($request);
-
       }
-
 
     /**
      * TejasCaptcha check
@@ -108,6 +105,26 @@ class VerifyTejasCaptcha
         //  if verify pass,remove session
         if ($check) {
             $this->session->remove('tejas_captcha_params');
+            {
+                if ($this->session->has('tejas_captcha_audio_files')
+                    && $this->session->has('tejas_captcha_audio_files.audioFileSuffix')) {
+
+                    $extensions = ['mp3', 'ogg', 'wav'];
+                    foreach ($extensions as $key => $value) {
+
+                        $file = $this->session->get('tejas_captcha_audio_files.osAudioStoragePath')
+                                .'/'.
+                                $this->session->get('tejas_captcha_audio_files.audioFilePrefix')
+                                . $this->session->get('tejas_captcha_audio_files.audioFileSuffix')
+                                . '.' . $value;
+                        try {
+                          unlink($file);
+                        } catch(Exception $e) {
+                          Log::debug('Caught exception: ' . $e->getMessage() . "\n");
+                        }
+                    }
+                }
+            }
         }
 
         return $check;

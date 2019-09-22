@@ -35,5 +35,10 @@ return [
         'blur' => 2,
         'invert' => true,
         'contrast' => -5,
+    ],
+    'audio' => [
+        'storeAudioInSession' => false,
+        'osAudioStoragePath' => base_path() . '/resources/audio',
+        'audioFilePrefix' => 'final'
     ]
 ];

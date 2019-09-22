@@ -24,6 +24,7 @@ use Intervention\Image\ImageManager;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Log;
+// Log levels: emergency, alert, critical, error, warning, notice, info and debug.
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 /**
@@ -182,6 +183,25 @@ class TejasCaptcha
      */
     protected $math_generated = 0;
 
+    /**
+     * @var bool
+     */
+    protected $storeAudioInSession = false;
+
+    /**
+     * @var string
+     */
+    protected $osAudioStoragePath = null;
+
+    /**
+     * @var string
+     */
+    protected $audioFilePrefix = null;
+
+    /**
+     * @var string
+     */
+    protected $audioFileSuffix = null;
 
     /**
      * Constructor
@@ -210,34 +230,67 @@ class TejasCaptcha
         $this->session = $session;
         $this->hasher_fn = $hasher;
         $this->str_fn = $str;
-
-            if (!$this->session->has('tejas_captcha_vars') || count($this->session->get('tejas_captcha_vars'))!= 6) {
-            $this->session->put('tejas_captcha_vars', [
-                'math' => 0,
-                'math_generated' => 0,
-                'oldx' => 0,
-                'min_color' => 64,
-                'max_color' => 200,
-                'color_threshhold' => 128
-            ]);
-        }
-
-        $this->math = $this->session->get('tejas_captcha_vars.math');
-        $this->math_generated = $this->session->get('tejas_captcha_vars.math_generated');
     }
 
     /**
      * @param string $config
      * @return void
      */
-    protected function configure($config_section)
+    protected function configure($config_section = 'default')
     {
         if ($this->config_repository->has('tejascaptcha.' . $config_section)) {
             foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
                 $this->{$key} = $val;
             }
         }
-    }
+
+      {
+            if ($this->session->has('tejas_captcha_audio_files')
+                && $this->session->has('tejas_captcha_audio_files.audioFileSuffix')) {
+
+                foreach ($this->session->get('tejas_captcha_audio_files') as $key => $val) {
+                    $this->{$key} = $val;
+                }
+                $extensions = ['mp3', 'ogg', 'wav'];
+                foreach ($extensions as $key => $value) {
+                    $file = $this->osAudioStoragePath.'/'.$this->audioFilePrefix.$this->audioFileSuffix.'.'.$value;
+                    try {
+                      unlink($file);
+                    } catch(Exception $e) {
+                      Log::debug('Caught exception: ' . $e->getMessage() . "\n");
+                    }
+                }
+                $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
+                $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
+
+            }elseif ($this->config_repository->has('tejascaptcha.audio')) {
+                $this->session->put('tejas_captcha_audio_files');
+                foreach ($this->config_repository->get('tejascaptcha.audio') as $key => $val) {
+                    $this->{$key} = $val;
+                    $this->session->put("tejas_captcha_audio_files.$key", $val);
+                }
+                $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
+                $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
+            }
+      }
+        // math and math_generated are not configuration items but they
+        // need to persist across captcha refrshes, initialize them here.
+        if (!$this->session->has('tejas_captcha_vars') || count($this->session->get('tejas_captcha_vars'))!= 2) {
+            $this->session->put('tejas_captcha_vars', [
+                'math' => 0,
+                'math_generated' => 0
+            ]);
+        }
+        $this->math = $this->session->get('tejas_captcha_vars.math');
+        $this->math_generated = $this->session->get('tejas_captcha_vars.math_generated');
+
+        // These 4 are not configuration items, initialize them here.
+        $this->oldx = 0;
+        $this->min_color = 64;
+        $this->max_color = 200;
+        $this->color_threshhold = 128;
+}
+
 
     /**
      * Create tejascaptcha image
@@ -336,14 +389,14 @@ class TejasCaptcha
       $bag = [];
       $key = '';
       $all_characters_no_vowels = Array();
-      $x = $oldx = $this->session->get('tejas_captcha_vars.oldx');
+      $x = $this->oldx;
 
       if ($this->math) {
-          while($oldx == $x) {
+          while($this->oldx == $x) {
               $x = random_int(10, 30);
               $y = random_int(1, 9);
           }
-          $this->session->put('tejas_captcha_vars.oldx', $x);
+          $this->oldx = $x;
 
           $tts = $bag = "$x + $y = ";
           $key = $x + $y;
@@ -371,7 +424,7 @@ class TejasCaptcha
       ]);
 
       $tts = preg_replace('/\s+/', '', $tts);
-      $text = "-d $tts";
+      $text = "-d $tts -f " . $this->session->get('tejas_captcha_audio_files.audioFileSuffix');
       $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
       $process->run();
       // executes after the command finishes
@@ -379,8 +432,9 @@ class TejasCaptcha
           throw new ProcessFailedException($process);
       }
       // else{
-      //   dd( $process->getOutput());
+      //   dd( $process->getOutput(), $text );
       // }
+
 
       return [
           'value' => $bag,
@@ -446,9 +500,9 @@ class TejasCaptcha
      */
     protected function fontColor()
     {
-        $min_color = $this->session->get('tejas_captcha_vars.min_color');
-        $max_color = $this->session->get('tejas_captcha_vars.max_color');
-        $color_threshhold = $this->session->get('tejas_captcha_vars.color_threshhold');
+        $min_color = $this->min_color;
+        $max_color = $this->max_color;
+        $color_threshhold = $this->color_threshhold;
 
         $red = 255;
         $blue = 255;
@@ -498,34 +552,6 @@ class TejasCaptcha
         }
 
         return $this->image;
-    }
-
-    /**
-     * TejasCaptcha check
-     *
-     * @param $value
-     * @return bool
-     */
-    public function check($value)
-    {
-        if (!$this->session->has('tejas_captcha_params')) {
-            return false;
-        }
-
-        $key = $this->session->get('tejas_captcha_params.key');
-        $sensitive = $this->session->get('tejas_captcha_params.sensitive');
-
-        if (!$sensitive) {
-            $value = $this->str_fn->lower($value);
-        }
-
-        $check = $this->hasher_fn->check($value, $key);
-        //  if verify pass,remove session
-        if ($check) {
-            $this->session->remove('tejas_captcha_params');
-        }
-
-        return $check;
     }
 
     /**
