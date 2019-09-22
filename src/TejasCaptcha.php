@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\Log;
 // Log levels: emergency, alert, critical, error, warning, notice, info and debug.
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+
+use Sessions\TejasCaptchaSessionCleanup;
+
 /**
  * Class TejasCaptcha
  * @package TejasCaptcha
@@ -72,6 +75,16 @@ class TejasCaptcha
      * @var ImageManager->image
      */
     protected $image;
+
+    /**
+     * @var ImageManager->image
+     */
+    protected $image;
+
+    /**
+     * @var TejasCaptchaSessionCleanup
+     */
+    protected $gc_fn;
 
     /**
      * @var array
@@ -212,6 +225,7 @@ class TejasCaptcha
      * @param Session $session
      * @param Hasher $hasher
      * @param Str $str
+     * @param TejasCaptchaSessionCleanup $gc
      * @throws Exception
      * @internal param Validator $validator
      */
@@ -221,7 +235,8 @@ class TejasCaptcha
         ImageManager $imageManager,
         Session $session,
         Hasher $hasher,
-        Str $str
+        Str $str,
+        TejasCaptchaSessionCleanup $gc
     )
     {
         $this->filesystem = $files;
@@ -230,6 +245,7 @@ class TejasCaptcha
         $this->session = $session;
         $this->hasher_fn = $hasher;
         $this->str_fn = $str;
+        $this->gc_fn = $gc;
     }
 
     /**
@@ -272,6 +288,8 @@ class TejasCaptcha
                 $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
                 $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
             }
+            $options = ['path'->$this->osAudioStoragePath, 'minutes'->1];
+            $this->gc_fn->gc($options);
       }
         // math and math_generated are not configuration items but they
         // need to persist across captcha refrshes, initialize them here.

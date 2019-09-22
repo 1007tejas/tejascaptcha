@@ -101,13 +101,16 @@ def main():
     "file '/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audioData"+fnsuffix+".wav'\n"\
     "file '/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/audio3"+fnsuffix+".wav'"
 
-    f = open('/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/konkat', 'w+')
+    f = open('/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audiosequence/konkat' +fnsuffix , 'w+')
     f.write(s)
     f.close()
 
-    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/konkat -ar 44100 -ac 2 -ab 192k -f mp3 /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.mp3')
-    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/konkat -ar 44100 -ac 2 -ab 192k -f ogg /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.ogg')
-    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/konkat /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.wav')
+    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audiosequence/konkat' +fnsuffix+ ' -ar 44100 -ac 2 -ab 192k -f mp3 /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.mp3')
+    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audiosequence/konkat' +fnsuffix+ ' -ar 44100 -ac 2 -ab 192k -f ogg /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.ogg')
+    doCommand('ffmpeg -y -safe 0  -f concat -i /var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audiosequence/konkat' +fnsuffix+ ' /var/www/dev.173.255.195.42/resources/audio/final' +fnsuffix+ '.wav')
+
+    s = '/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audiosequence/konkat' +fnsuffix
+    doCommand('rm '+s)
 
      # subprocess restrictions for shell scripting, don't want shell=true as it is being deprecated
     l = ['audio1' +fnsuffix, 'audio2' +fnsuffix, 'audio3' +fnsuffix, 'audioData' +fnsuffix]
