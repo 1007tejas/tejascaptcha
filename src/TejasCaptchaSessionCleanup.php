@@ -1,21 +1,23 @@
 <?php
 
-namespace Tejas\TejasCaptcha\Sessions;
+namespace Tejas\TejasCaptcha;
 
 use Symfony\Component\Finder\Finder;
 use Illuminate\Filesystem\Filesystem;
-
 use Illuminate\Support\Facades\Log;
 
-// From laravel framework/src/Illuminate/Session/FileSessionHandler.
+/**
+ * Class TejasCaptchaSessionCleanup
+ * @package TejasCaptcha
+ */
 class TejasCaptchaSessionCleanup {
 
   /**
    * The filesystem instance.
    *
-   * @var \Illuminate\Filesystem\Filesystem
+   * @var Filesystem
    */
-  protected $files;
+  protected $filesystem;
 
   /**
    * The path where final audio files are stored.
@@ -33,21 +35,17 @@ class TejasCaptchaSessionCleanup {
 
     /**
     * Create a new TejasCaptcha garbage collector
-    * @param  \Illuminate\Filesystem\Filesystem  $files
-    * @param  string  $path
-    * @param  int  $minutes
-    * @return void
     */
-    public function __construct(Filesystem $files, $path=null, $minutes=null)
+    public function __construct()
     {
-      $this->path = $path;
-      $this->files = $files;
-      $this->minutes = $minutes;
+      $this->filesystem = new Filesystem();
     }
 
     /**
-     * {@inheritdoc}
-     */
+    * Create a new TejasCaptcha garbage collector
+    * @param  array $options
+    * @return void
+    */
     public function gc(array $options = []) {
         $this->path = $options['path'] ?? $this->path;
         $this->minutes = $options['minutes'] ?? $this->minutes;
@@ -59,12 +57,10 @@ class TejasCaptchaSessionCleanup {
                         ->ignoreDotFiles(true)
                         ->date('<= now - '.$this->minutes.' minutes');
             foreach ($files as $file) {
-                $this->files->delete($file->getRealPath());
+                $this->filesystem->delete($file->getRealPath());
             }
-        }catch(exception(e)){
+        }catch(exception $e){
             LOG::debug('Caught exception: ' . $e->getMessage() . "\n");
-            return false;
         }
-        return true;
     }
 }

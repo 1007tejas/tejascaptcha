@@ -27,8 +27,9 @@ use Illuminate\Support\Facades\Log;
 // Log levels: emergency, alert, critical, error, warning, notice, info and debug.
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Debug\DebugClassLoader;
 
-use Sessions\TejasCaptchaSessionCleanup;
+use Tejas\TejasCaptcha\TejasCaptchaSessionCleanup;
 
 /**
  * Class TejasCaptcha
@@ -67,6 +68,11 @@ class TejasCaptcha
     protected $str_fn;
 
     /**
+     * @var TejasCaptchaSessionCleanup
+     */
+    protected $gc_fn;
+
+    /**
      * @var ImageManager->canvas
      */
     protected $canvas;
@@ -75,16 +81,6 @@ class TejasCaptcha
      * @var ImageManager->image
      */
     protected $image;
-
-    /**
-     * @var ImageManager->image
-     */
-    protected $image;
-
-    /**
-     * @var TejasCaptchaSessionCleanup
-     */
-    protected $gc_fn;
 
     /**
      * @var array
@@ -100,6 +96,16 @@ class TejasCaptcha
      * @var array
      */
     protected $fontColors = [];
+
+    /**
+     * @var int
+     */
+    protected $min_color;
+
+    /**
+     * @var int
+     */
+    protected $max_color;
 
     /**
      * @var int
@@ -225,7 +231,6 @@ class TejasCaptcha
      * @param Session $session
      * @param Hasher $hasher
      * @param Str $str
-     * @param TejasCaptchaSessionCleanup $gc
      * @throws Exception
      * @internal param Validator $validator
      */
@@ -235,8 +240,7 @@ class TejasCaptcha
         ImageManager $imageManager,
         Session $session,
         Hasher $hasher,
-        Str $str,
-        TejasCaptchaSessionCleanup $gc
+        Str $str
     )
     {
         $this->filesystem = $files;
@@ -245,7 +249,7 @@ class TejasCaptcha
         $this->session = $session;
         $this->hasher_fn = $hasher;
         $this->str_fn = $str;
-        $this->gc_fn = $gc;
+
     }
 
     /**
@@ -288,8 +292,11 @@ class TejasCaptcha
                 $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
                 $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
             }
-            $options = ['path'->$this->osAudioStoragePath, 'minutes'->1];
+            // garbage collection
+            $options = array('path'=>$this->osAudioStoragePath, 'minutes'=>1);
+            $this->gc_fn = new TejasCaptchaSessionCleanup();
             $this->gc_fn->gc($options);
+            // $this->gc_fn->gc($options);
       }
         // math and math_generated are not configuration items but they
         // need to persist across captcha refrshes, initialize them here.
@@ -302,11 +309,10 @@ class TejasCaptcha
         $this->math = $this->session->get('tejas_captcha_vars.math');
         $this->math_generated = $this->session->get('tejas_captcha_vars.math_generated');
 
-        // These 4 are not configuration items, initialize them here.
+        // These are not configuration items, initialize them here.
         $this->oldx = 0;
         $this->min_color = 64;
         $this->max_color = 200;
-        $this->color_threshhold = 128;
 }
 
 
@@ -520,7 +526,6 @@ class TejasCaptcha
     {
         $min_color = $this->min_color;
         $max_color = $this->max_color;
-        $color_threshhold = $this->color_threshhold;
 
         $red = 255;
         $blue = 255;
@@ -529,11 +534,9 @@ class TejasCaptcha
         if (!empty($this->fontColors)) {
             $color = $this->fontColors[random_int(0, count($this->fontColors) - 1)];
         } else {
-            while( $red >= $color_threshhold && $green >= $color_threshhold && $blue >= $color_threshhold ) {
-              $red = random_int($min_color, $max_color);
-              $blue = random_int($min_color, $max_color);
-              $green = random_int($min_color, $max_color);
-            }
+            $red = random_int($min_color, $max_color);
+            $blue = random_int($min_color, $max_color);
+            $green = random_int($min_color, $max_color);
             $color = [$red, $green, $blue];
         }
 
