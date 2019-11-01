@@ -264,40 +264,6 @@ class TejasCaptcha
             }
         }
 
-      {
-            if ($this->session->has('tejas_captcha_audio_files')
-                && $this->session->has('tejas_captcha_audio_files.audioFileSuffix')) {
-
-                foreach ($this->session->get('tejas_captcha_audio_files') as $key => $val) {
-                    $this->{$key} = $val;
-                }
-                $extensions = ['mp3', 'ogg', 'wav'];
-                foreach ($extensions as $key => $value) {
-                    $file = $this->osAudioStoragePath.'/'.$this->audioFilePrefix.$this->audioFileSuffix.'.'.$value;
-                    try {
-                      unlink($file);
-                    } catch(Exception $e) {
-                      Log::debug('Caught exception: ' . $e->getMessage() . "\n");
-                    }
-                }
-                $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
-                $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
-
-            }elseif ($this->config_repository->has('tejascaptcha.audio')) {
-                $this->session->put('tejas_captcha_audio_files');
-                foreach ($this->config_repository->get('tejascaptcha.audio') as $key => $val) {
-                    $this->{$key} = $val;
-                    $this->session->put("tejas_captcha_audio_files.$key", $val);
-                }
-                $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
-                $this->session->put('tejas_captcha_audio_files.audioFileSuffix', $this->audioFileSuffix);
-            }
-            // garbage collection
-            $options = array('path'=>$this->osAudioStoragePath, 'minutes'=>1);
-            $this->gc_fn = new TejasCaptchaSessionCleanup();
-            $this->gc_fn->gc($options);
-            // $this->gc_fn->gc($options);
-      }
         // math and math_generated are not configuration items but they
         // need to persist across captcha refrshes, initialize them here.
         if (!$this->session->has('tejas_captcha_vars') || count($this->session->get('tejas_captcha_vars'))!= 2) {
@@ -314,7 +280,6 @@ class TejasCaptcha
         $this->min_color = 64;
         $this->max_color = 200;
 }
-
 
     /**
      * Create tejascaptcha image
@@ -403,10 +368,11 @@ class TejasCaptcha
         return $this->backgrounds[random_int(0, count($this->backgrounds) - 1)];
     }
 
+
     /**
      * Generate tejascaptcha text
      *
-     * @return string
+     * @return array
      */
     protected function generate()
     {
@@ -422,7 +388,7 @@ class TejasCaptcha
           }
           $this->oldx = $x;
 
-          $tts = $bag = "$x + $y = ";
+          $bag = "$x + $y = ";
           $key = $x + $y;
           $key .= '';
       } else {
@@ -437,7 +403,7 @@ class TejasCaptcha
                   $bag[] = $this->sensitive ? ((random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? $this->str_fn->upper($onechar) : $onechar) : $onechar;
               }
           }
-          $tts = $key = $bag = implode('', $bag);
+          $key = $bag = implode('', $bag);
       }
 
       $hash = $this->hasher_fn->make($key);
@@ -447,18 +413,7 @@ class TejasCaptcha
           'key' => $hash
       ]);
 
-      $tts = preg_replace('/\s+/', '', $tts);
-      $text = "-d $tts -f " . $this->session->get('tejas_captcha_audio_files.audioFileSuffix');
-      $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
-      $process->run();
-      // executes after the command finishes
-      if (!$process->isSuccessful()) {
-          throw new ProcessFailedException($process);
-      }
-      // else{
-      //   dd( $process->getOutput(), $text );
-      // }
-
+      $this->setup_tts($bag);
 
       return [
           'value' => $bag,
@@ -466,6 +421,20 @@ class TejasCaptcha
           'key' => $hash
       ];
     }
+
+    /**
+     * Set tejascaptcha text to speach string
+     *
+     * @return void
+     */
+    protected function setup_tts($bag)
+    {
+      $tts = preg_replace('/\s+/', '', $bag);
+      $this->session->put('tejas_captcha_audio_files', [
+          'tts' => $tts
+      ]);
+    }
+
 
     /**
      * Writing tejascaptcha text
@@ -514,7 +483,7 @@ class TejasCaptcha
      */
     protected function fontSize()
     {
-        return random_int($this->image->height() - 10, $this->image->height());
+        return random_int($this->image->height() - 20, $this->image->height() -10);
     }
 
     /**
@@ -603,7 +572,7 @@ class TejasCaptcha
      * @param null $attrs
      * @return string
      */
-    public function tejas_captcha_image_onAjaxRequest($attrs = null)
+    public function image_onAjaxRequest($attrs = null)
     {
       foreach ($attrs as $attr => $value) {
           if ($attr == 'src') {
@@ -619,7 +588,7 @@ class TejasCaptcha
               $this->session->put('tejas_captcha_vars.math', $this->math);
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
-              // Log::debug('tejas_captcha_image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
+              // Log::debug('image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
 
           }
       }
@@ -633,7 +602,7 @@ class TejasCaptcha
      * @param null $attrs
      * @return string
      */
-    public function tejas_captcha_image_onPageLoad($attrs = null)
+    public function image_onPageLoad($attrs = null)
     { // this is hee in case no jquery
       $attrs_str = '';
       foreach ($attrs as $attr => $value) {
@@ -651,7 +620,7 @@ class TejasCaptcha
               $this->session->put('tejas_captcha_vars.math', $this->math);
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
-              // Log::debug('tejas_captcha_image-onPageLoad: $math: '.$this->math.' $math_generated: '.$this->math_generated);
+              // Log::debug('image-onPageLoad: $math: '.$this->math.' $math_generated: '.$this->math_generated);
           }
           $attrs_str .= $attr . "='" . $value . "'";
       }

@@ -164,7 +164,7 @@ return [
             }
         });
         $.ajax({
-            url: "tejascaptcha/tejas_captcha_image-ajaxRequest",
+            url: "tejascaptcha/image",
             data: {id: 'captchaImage', alt: '', class: 'tejascaptcha',  src: ''},
             type: 'post',
             success: function(data) {
@@ -198,7 +198,7 @@ return [
                                          'class' => 'popup-menu-label menu-label-required col-sm-12']) !!}
 </div>
 <div class="row">
-  <img {{ tejas_captcha_image-initialPageLoad(array('id' => 'captchaImage',
+  <img {{ image-initialPageLoad(array('id' => 'captchaImage',
                                                       'alt' => '', 'class' => 'tejascaptcha',)) }}>
   <a href='javascript:;' id='tejascaptcha-link'>
      <div class="fas fa-sync tejas-tejascaptcha-icon-sync"

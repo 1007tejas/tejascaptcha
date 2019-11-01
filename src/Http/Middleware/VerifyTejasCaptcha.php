@@ -27,7 +27,6 @@ use \Illuminate\Http\Request;
  */
 class VerifyTejasCaptcha
 {
-
     /**
      * @var Session
      */
@@ -71,7 +70,7 @@ class VerifyTejasCaptcha
      */
      public function handle($request, Closure $next)
       {
-        if($this->verifyTejasCaptcha){
+          if ( $this->session->has('tejas_captcha_params') && $this->verifyTejasCaptcha ) {
 
               $value = ($request->input('captcha_response')) ? $request->input('captcha_response') : false;
               if ( !$value || !$this->verifyCaptcha($value) ) {
@@ -90,43 +89,10 @@ class VerifyTejasCaptcha
      */
     public function verifyCaptcha($value)
     {
-        if (!$this->session->has('tejas_captcha_params')) {
-            return false;
-        }
-
         $key = $this->session->get('tejas_captcha_params.key');
         $sensitive = $this->session->get('tejas_captcha_params.sensitive');
-
-        if (!$sensitive) {
-            $value = $this->str_fn->lower($value);
-        }
-
+        if (!$sensitive) { $value = $this->str_fn->lower($value); }
         $check = $this->hasher_fn->check($value, $key);
-        //  if verify pass,remove session
-        if ($check) {
-            $this->session->remove('tejas_captcha_params');
-            {
-                if ($this->session->has('tejas_captcha_audio_files')
-                    && $this->session->has('tejas_captcha_audio_files.audioFileSuffix')) {
-
-                    $extensions = ['mp3', 'ogg', 'wav'];
-                    foreach ($extensions as $key => $value) {
-
-                        $file = $this->session->get('tejas_captcha_audio_files.osAudioStoragePath')
-                                .'/'.
-                                $this->session->get('tejas_captcha_audio_files.audioFilePrefix')
-                                . $this->session->get('tejas_captcha_audio_files.audioFileSuffix')
-                                . '.' . $value;
-                        try {
-                          unlink($file);
-                        } catch(Exception $e) {
-                          Log::debug('Caught exception: ' . $e->getMessage() . "\n");
-                        }
-                    }
-                }
-            }
-        }
-
         return $check;
     }
 }

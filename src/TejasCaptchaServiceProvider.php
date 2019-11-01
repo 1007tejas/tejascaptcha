@@ -3,37 +3,59 @@
 namespace Tejas\TejasCaptcha;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Session\Store as Session;
 
 class TejasCaptchaServiceProvider extends ServiceProvider
 {
+    /**
+    * @var Session
+    */
+    protected $session;
 
     /**
      * Boot the service provider.
+     * @param Session $session
      *
      * @return null
      */
-    public function boot()
+    public function boot(Session $session)
     {
+        $this->session = $session;
         // Publish configuration files
         $this->publishes([
             __DIR__ . '/../config/tejascaptcha.php' => config_path('tejascaptcha.php')
         ], 'config');
 
         // HTTP routing
-        if (strpos($this->app->version(), 'Lumen') !== false) {
+        //if (strpos($this->app->version(), 'Lumen') !== false) {
             // $this->app->get('tejascaptcha[/api/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptchaApi');
-            $this->app->get('tejascaptcha[/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptcha');
-        } else {
-            if ((double)$this->app->version() >= 5.2) {
-            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi')->middleware('web');
-                $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
-                $this->app['router']->post('tejascaptcha/tejas_captcha_image_ajaxRequest', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAjax')->middleware('web');
-            } else {
-            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi');
-                $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha');
-                $this->app['router']->post('tejascaptcha/tejas_captcha_image_ajaxRequest', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAjax');
+            //$this->app->get('tejascaptcha[/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptcha');
+      //  } else {
+            if(($this->session->has('tejas_captcha_params') &&
+                $this->session->has('tejas_captcha_params.inprogress') &&
+                $this->session->get('tejas_captcha_params.inprogress')=== false) ||
+                !$this->session->has('tejas_captcha_params.inprogress')) {
+
+                $this->session->put('tejas_captcha_params.inprogress', true);
+                $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
+                $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
             }
-        }
+            $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
+            $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
+
+            //if ((double)$this->app->version() >= 5.2) {
+            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi')->middleware('web');
+            // $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
+            // $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
+            // $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
+            // $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
+            //} else {
+            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi');
+            //     $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
+            //     $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
+            //     $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
+            //     $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
+        //}
 
         // // Validator extensions
         // $this->app['validator']->extend('tejascaptcha', function ($attribute, $value, $parameters) {
