@@ -111,7 +111,7 @@ def threadJob():
          # subprocess restrictions for shell scripting, don't want shell=true as it is being deprecated
         threadLocalData1.l = ['audio1' +threadLocalData1.fnsuffix, 'audio2' +threadLocalData1.fnsuffix, 'audio3' +threadLocalData1.fnsuffix, 'audioData' +threadLocalData1.fnsuffix]
         for threadLocalData1.u in threadLocalData1.l:
-            s = '/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/' +threadLocalData1.u+ '.wav'
+            threadLocalData1.s = '/var/www/dev.173.255.195.42/vendor/tejas/tejascaptcha/src/scripts/audio/' +threadLocalData1.u+ '.wav'
             doCommand('rm '+threadLocalData1.s)
 
         jobQueue.task_done()
