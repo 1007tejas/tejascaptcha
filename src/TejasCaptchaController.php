@@ -252,7 +252,7 @@ class TejasCaptchaController extends Controller
                    ->withHeaders([
                        'Content-type' => 'audio/mpeg',
                        'Cache-Control' => 'no-cache',
-                       'Content-Disposition' =>  'attachment; filename="captcha_audio_sss.mp3"',
+                       'Content-Disposition' =>  'inline',  //'attachment; filename="captcha_audio_sss.mp3"',
                    ]);
        }else{
 
