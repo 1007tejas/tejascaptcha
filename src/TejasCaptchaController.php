@@ -241,22 +241,26 @@ class TejasCaptchaController extends Controller
   }
 
   /**
-   * get audio silence
-   *
-   */
-  public function getAudioSilence()
-  {
-      if(file_exists('./scripts/audio/250-milliseconds-of-silence.mp3')) {
+    * get audio silence
+    *
+    */
+   public function getAudioSilence()
+   {
+       if(file_exists('../vendor/tejas/tejascaptcha/src/scripts/audio/250-milliseconds-of-silence.mp3')) {
+           $fileContents = file_get_contents('../vendor/tejas/tejascaptcha/src/scripts/audio/250-milliseconds-of-silence.mp3');
+           return response($fileContents)
+                   ->withHeaders([
+                       'Content-type' => 'audio/mpeg',
+                       'Cache-Control' => 'no-cache',
+                       'Content-Disposition' =>  'attachment; filename="captcha_audio_sss.mp3"',
+                   ]);
+       }else{
 
-          $fileContents = file_get_contents('./scripts/audio/250-milliseconds-of-silence.mp3');
-          return response($fileContents)
-                  ->withHeaders([
-                      'Content-type' => 'audio/mpeg',
-                      'Cache-Control' => 'no-cache',
-                      'Content-Disposition' =>  'attachment; filename="captcha_audio_sss.mp3"',
-                  ]);
-      }
-  }
+           echo 'File does not exist 250-miliseconds-of-silence.mp3';
+       }
+
+   }
+
 
     /**
      * get CAPTCHA
