@@ -40,6 +40,7 @@ class TejasCaptchaServiceProvider extends ServiceProvider
                 $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
                 $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
             }
+            $this->app['router']->get('tejascaptcha/audio/silence', '\Tejas\TejasCaptcha\TejasCaptchaController@getAudioSilence');
             $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
             $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
 
