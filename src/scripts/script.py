@@ -184,7 +184,7 @@ def main():
     threadLock.release()
 
     # block until all tasks are done
-    jobQueue.join();
+    jobQueue.join()
 
     # stop workers
     # for i in range(max_worker_threads):

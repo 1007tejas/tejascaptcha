@@ -613,7 +613,7 @@ class TejasCaptcha
           if ($attr == 'alt') {
 
               $this->math = ( random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? 1 : 0;
-              $value = $this->math;
+              // $value = $this->math;
               $value = '';
               $this->math_generated = 1;
 

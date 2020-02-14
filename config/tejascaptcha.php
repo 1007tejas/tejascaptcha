@@ -1,5 +1,5 @@
 <?php
-
+// Place a copy of this  file in app/config if you want to modify the default values
 return [
     'default' => [
         'length' => 5,

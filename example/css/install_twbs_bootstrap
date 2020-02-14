@@ -1,0 +1,5 @@
+bootstrap-Free is hosted on github at [ https://github.com/twbs/bootstrap.git ].
+In your laravel project you can install with [ npm install bootstrap ]
+The font(s) are included by @import in your tejascaptcha.scss file with:
+// Fonts
+@import '~bootstrap/scss/bootstrap';
