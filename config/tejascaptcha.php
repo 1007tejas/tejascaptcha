@@ -38,7 +38,7 @@ return [
     ],
     'audio' => [
         'storeAudioInSession' => false,
-        'osAudioStoragePath' => base_path() . '/resources/audio',
+        'osAudioDirectory' => '/resources/audio',
         'audioFilePrefix' => 'final'
     ]
 ];

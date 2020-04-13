@@ -1,0 +1,41 @@
+<div class='row'>
+    <img {{ image_initialPageLoad(array(' id'=>'captchaImage', ' alt'=>'', ' class'=>'captcha')) }}/>
+
+    <div class="col">
+        <a href='javascript:;'>
+            <div  id='tejas_captcha_refresh_icon' class='fas fa-sync tejas-captcha-icon-sync' data-toggle='tooltip' title='Button Refresh Captcha'></div>
+        </a>
+
+        <div class="row">
+            <div class="col tejas-captcha-icon-no-pad">
+                <a href='javascript:;' >
+                    <div id='tejas_captcha_audio_icon' class='fas fa-volume-up tejas-captcha-icon-volume-up' data-toggle='tooltip' title='Button Audio Play Captcha'></div>
+                </a>
+                <audio id='tejas_captcha_audio' preload="none">
+                    <source src='tejascaptcha/audio/captcha.mp3' type="audio/mpeg">
+                    <!-- <source src='tejascaptcha/audio/captcha.ogg' type="audio/ogg">
+                    <source src='tejascaptcha/audio/captcha.wav' type="audio/wav"> -->
+                    Unfortunately this browser does not support HTML-5 audio.
+                </audio>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='row sm-bot-pad'>
+    {!! Form::label('', 'Tejas Captcha @github', ['class' => 'popup-menu-label mews-credit col-sm-12']) !!}
+</div>
+<div class='row'>
+    {!! Form::label('captcha', 'Enter the captcha or answer', ['for' => 'captcha', 'id' => 'captchaImageLabel',
+    'class' => 'popup-menu-label menu-label-required col-sm-12'.($errors->has('captcha_response')?' form-error':'')]) !!}
+</div>
+<div class='row'>
+  <span id='error_captcha_response' class='invalid-form-field-entry'></span>
+</div>
+<div class='row md-bot-pad'>
+    {!! Form::text('captcha_response', null, ['id' => 'captcha_response', 'placeholder' => 'Captcha / Math Answer (required)',
+    'class' => 'captcha-input menu-label-input col-sm-12'.($errors->has('captcha_response')?' form-error':''),
+    'data-toggle' => 'tooltip', 'title' => 'Text Input Enter Captcha or Answer Math Problem']) !!}
+</div>
+</br>

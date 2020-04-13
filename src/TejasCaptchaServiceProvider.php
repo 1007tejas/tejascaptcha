@@ -2,6 +2,18 @@
 
 namespace Tejas\TejasCaptcha;
 
+/**
+ * Part of Laravel 5 TejasCaptcha package
+ *
+ * @copyright
+ * @version
+ * @author Jeff Hallmark
+ * @contact
+ * @web https://github.com/1007tejas/
+ * @date 2019-08-29
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ */
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Session\Store as Session;
 
@@ -15,7 +27,6 @@ class TejasCaptchaServiceProvider extends ServiceProvider
     /**
      * Boot the service provider.
      * @param Session $session
-     *
      * @return null
      */
     public function boot(Session $session)
@@ -80,10 +91,19 @@ class TejasCaptchaServiceProvider extends ServiceProvider
       //$app->singleton('app', 'Illuminate\Container\Container');
       //$app->singleton('config', 'Illuminate\Config\Repository');
         // Merge configs
+
         $this->mergeConfigFrom(
             __DIR__ . '/../config/tejascaptcha.php', 'tejascaptcha'
         );
 
+        // foreach ($this->app['config']->get('tejascaptcha.default') as $key => $val) {
+        //     echo $key . ' = ' . $val . '<br>';
+        // }
+        // foreach ($this->app['config']->get('tejascaptcha.audio') as $key => $val) {
+        //     echo $key . ' = ' . $val . '<br>';
+        // }
+        // echo base_path();
+        //exit;
         // Bind tejascaptcha
         $this->app->singleton('tejascaptcha', function ($app) {
             return new TejasCaptcha(

@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Laravel 5 TejasCaptcha package
+ * Part of Laravel 5 TejasCaptcha package
  *
  * @copyright
  * @version
@@ -201,26 +201,26 @@ class TejasCaptcha
      * @var bool
      */
     protected $math_generated = 0;
-
-    /**
-     * @var bool
-     */
-    protected $storeAudioInSession = false;
-
-    /**
-     * @var string
-     */
-    protected $osAudioStoragePath = null;
-
-    /**
-     * @var string
-     */
-    protected $audioFilePrefix = null;
-
-    /**
-     * @var string
-     */
-    protected $audioFileSuffix = null;
+    //
+    // /**
+    //  * @var bool
+    //  */
+    // protected $storeAudioInSession = false;
+    //
+    // /**
+    //  * @var string
+    //  */
+    // protected $osAudioStoragePath = null;
+    //
+    // /**
+    //  * @var string
+    //  */
+    // protected $audioFilePrefix = null;
+    //
+    // /**
+    //  * @var string
+    //  */
+    // protected $audioFileSuffix = null;
 
     /**
      * Constructor
@@ -265,7 +265,7 @@ class TejasCaptcha
         }
 
         // math and math_generated are not configuration items but they
-        // need to persist across captcha refrshes, initialize them here.
+        // need to persist across captcha refreshes, initialize them here.
         if (!$this->session->has('tejas_captcha_vars') || count($this->session->get('tejas_captcha_vars'))!= 2) {
             $this->session->put('tejas_captcha_vars', [
                 'math' => 0,

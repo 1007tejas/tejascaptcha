@@ -2,6 +2,18 @@
 
 namespace Tejas\TejasCaptcha;
 
+/**
+ * Part of Laravel 5 TejasCaptcha package
+ *
+ * @copyright
+ * @version
+ * @author Jeff Hallmark
+ * @contact
+ * @web https://github.com/1007tejas/
+ * @date 2019-08-29
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ */
+
 use Symfony\Component\Finder\Finder;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;

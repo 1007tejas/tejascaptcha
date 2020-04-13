@@ -1,5 +1,5 @@
 <?php
-
+// For Laravel framework
 namespace Tejas\TejasCaptcha\Facades;
 
 use Illuminate\Support\Facades\Facade;

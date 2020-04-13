@@ -1,6 +1,6 @@
 # Tejas Captcha for Laravel 5
 
-A service provider for [Laravel 5](http://www.laravel.com/). Capabilities include refresh, audio and-type randomization. The might display as a regular or a math problem that requires an answer.
+A service provider for [Laravel 5](http://www.laravel.com/). Capabilities include refresh, audio and captcha type randomization. Types are regular character or math problem captchas.
 
 ## Preview
 
@@ -8,13 +8,13 @@ A service provider for [Laravel 5](http://www.laravel.com/). Capabilities includ
 
 The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org) by requiring the
 `tejascaptcha` package and setting the `minimum-stability` to `dev` (required for Laravel 5) in your
-project's `composer.json`.
+project's `composer.json` then `composer update`
 
 ```json
 {
     "require": {
         "laravel/framework": "5.0.*",
-        "tejascaptcha": "~1.0"
+        "tejascaptcha": ">1.0"
     },
     "minimum-stability": "dev"
 }
@@ -29,7 +29,7 @@ composer require tejascaptcha
 
 Update your packages with ```composer update``` or install with ```composer install```.
 
-In Windows, you'll need to confirm that the following files are included in the ```php.ini file``` file, add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
+In Windows, you'll need to confirm that the following files are included in the ```php.ini file``` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
 
 
 ## Usage
