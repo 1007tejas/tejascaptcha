@@ -38,7 +38,17 @@ return [
     ],
     'audio' => [
         'storeAudioInSession' => false,
-        'osAudioDirectory' => '/resources/audio',
+        'osAudioDirectory' => '/storage/audio',
         'audioFilePrefix' => 'final'
     ]
 ];
+
+// The osAudioDirectory must exist and requires r/w permissions set for your
+// web user. The web user for Apache2 is www-data
+// e.g.
+// For a Linux server running Apache2 and using the defult osAudioDirectory:
+// From the root directory of your laravel project, issue the following command:
+//   mkdir storage/audio; chown -R www-data storage/audio
+// Now verify that the correct web user has rwx permisions with:
+//   ls -las storage/audio/
+//     drwxr-xr-x 2 www-data root 4096 Apr 14 08:41 .

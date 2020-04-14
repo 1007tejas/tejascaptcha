@@ -42,10 +42,11 @@ class TejasCaptchaServiceProvider extends ServiceProvider
             // $this->app->get('tejascaptcha[/api/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptchaApi');
             //$this->app->get('tejascaptcha[/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptcha');
       //  } else {
-            if(($this->session->has('tejas_captcha_params') &&
-                $this->session->has('tejas_captcha_params.inprogress') &&
-                $this->session->get('tejas_captcha_params.inprogress')=== false) ||
-                !$this->session->has('tejas_captcha_params.inprogress')) {
+            if(( $this->session->has('tejas_captcha_params')
+                 && $this->session->has('tejas_captcha_params.inprogress')
+                 && $this->session->get('tejas_captcha_params.inprogress') === false)
+                 || ( !$this->session->has('tejas_captcha_params')
+                 || !$this->session->has('tejas_captcha_params.inprogress') )) {
 
                 $this->session->put('tejas_captcha_params.inprogress', true);
                 $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');

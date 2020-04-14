@@ -29,10 +29,10 @@ use Tejas\TejasCaptcha\TejasCaptchaSessionCleanup;
  */
 class TejasCaptchaController extends Controller
 {
-  /**
-  * @var TejasCaptchaSessionCleanup
-  */
-  protected $cleanup;
+    /**
+    * @var TejasCaptchaSessionCleanup
+    */
+    protected $cleanup;
 
     /**
     * @var Session
@@ -52,22 +52,12 @@ class TejasCaptchaController extends Controller
     /**
     * @var string
     */
-    protected $osBasePath;
+    protected $osBasePath = null, $osAudioDirectory = null, $osAudioStoragePath = null;
 
     /**
     * @var string
     */
-    protected $osAudioDirectory;
-
-    /**
-    * @var string
-    */
-    protected $audioFilePrefix;
-
-    /**
-    * @var string
-    */
-    protected $audioFileSuffix;
+    protected $audioFilePrefix = null, $audioFileSuffix = null, $audioFileSuffixes = null, $oldAudioFileSuffix = null;
 
     /**
     * @var array
@@ -77,15 +67,7 @@ class TejasCaptchaController extends Controller
     /**
     * @var string
     */
-    protected $tts;
-
-
-    /**
-    * @var string
-    */
-    protected $oldTts;
-
-
+    protected $tts = null;
 
      /**
       * Constructor
@@ -102,8 +84,37 @@ class TejasCaptchaController extends Controller
          $this->session = $session;
          $this->config_repository = $config_repository;
          $this->cleanup = $cleanup;
-         $this->osBasePath = base_path();
+         $this->setSessionAudio();
      }
+
+    private function getSessionAudio() {
+
+       if($this->session->has("tejas_captcha_audio_files")) {
+           foreach ($this->session->get("tejas_captcha_audio_files") as $key => $val) {
+               $this->{$key} = $val;
+           }
+       }
+    }
+
+    private function setSessionAudio() {
+
+        if($this->config_repository->has('tejascaptcha.audio')) {
+            foreach ($this->config_repository->get('tejascaptcha.audio') as $key => $val) {
+                $this->{$key} = $val;
+                $this->session->put("tejas_captcha_audio_files.".$key, $val);
+            }
+        }
+
+        if(strpos($this->osAudioDirectory, '/') !== 0) {
+          $this->osAudioDirectory = '/' . $this->osAudioDirectory;
+        }
+
+        $this->osBasePath = base_path();
+        $this->osAudioStoragePath = $this->osBasePath . $this->osAudioDirectory;
+
+        $this->session->put("tejas_captcha_audio_files.osBasePath", $this->osBasePath);
+        $this->session->put("tejas_captcha_audio_files.osAudioStoragePath", $this->osAudioStoragePath);
+    }
 
     public function postTejasCaptchaImage(TejasCaptcha $tejascaptcha)
     {
@@ -123,8 +134,7 @@ class TejasCaptchaController extends Controller
         return $result;
     }
 
-    public function postTejasCaptchaCreateAudio(TejasCaptcha $tejascaptcha)
-    {
+    public function postTejasCaptchaCreateAudio(TejasCaptcha $tejascaptcha) {
 
         if (ob_get_contents()) {
             ob_clean();
@@ -133,78 +143,62 @@ class TejasCaptchaController extends Controller
         $extensions = ['mp3', 'ogg', 'wav'];
 
         if(isset($_POST['id']) && !empty($_POST['id']) && $_POST['id'] == 'captchaAudio') {
+
             $_POST = Array();
             if($this->config_repository->has('tejascaptcha.audio')) {
-                foreach ($this->config_repository->get('tejascaptcha.audio') as $key => $val) {
-                    $this->{$key} = $val;
-                    $this->session->put("tejas_captcha_audio_files.".$key, $val);
-                }
 
-                $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
-                $this->session->put("tejas_captcha_audio_files.audioFileSuffix", $this->audioFileSuffix);
+              $this->getSessionAudio();
 
-                if($this->session->has("tejas_captcha_audio_files.audioFileSuffixes")) {
+              $this->audioFileSuffix = '_'.abs(random_int (PHP_INT_MIN , PHP_INT_MAX ));
+              $this->session->put("tejas_captcha_audio_files.audioFileSuffix", $this->audioFileSuffix);
+
+              if($this->session->has("tejas_captcha_audio_files.audioFileSuffixes")) {
                   $this->audioArray = $this->session->get("tejas_captcha_audio_files.audioFileSuffixes");
-                }
-                $this->audioArray[] = '*' . $this->audioFileSuffix . '*';
-                $this->session->put("tejas_captcha_audio_files.audioFileSuffixes", $this->audioArray);
+              }
+              $this->audioArray[] = '*' . $this->audioFileSuffix . '*';
+              $this->session->put("tejas_captcha_audio_files.audioFileSuffixes", $this->audioArray);
 
-                if( !$this->session->has("tejas_captcha_audio_files.oldAudioFileSuffix")) {
+              // cleanup old file storage for this session
+              if( !$this->session->has("tejas_captcha_audio_files.oldAudioFileSuffix")) {
                   $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
-                }else{
+              }else{
                   $this->oldAudioFileSuffix = $this->session->get("tejas_captcha_audio_files.oldAudioFileSuffix");
                   foreach ($extensions as $ext) {
-                    $process = new Process('rm ' . $this->osAudioDirectory . '/' . $this->audioFilePrefix . $this->oldAudioFileSuffix . '.' . $ext);
-                    $process->run();
-                  }
-
-                  $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
+                      $process = new Process('rm ' . $this->osAudioStoragePath . '/' . $this->audioFilePrefix . $this->oldAudioFileSuffix . '.' . $ext);
+                      $process->run();
                 }
-                $this->tts = $this->session->get('tejas_captcha_audio_files.tts');
 
-                $text = "-b$this->osBasePath -d$this->osAudioDirectory -c$this->tts -s$this->audioFileSuffix";
-// var_dump($text); exit;
-                $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
-                $process->run();
-                // executes after the command finishes
-                if (! $process->isSuccessful()) {
-                    throw new ProcessFailedException($process);
-                }elseif ($process->isSuccessful()) {
-                    $audiofile = ['audiofile' => $this->session->get('tejas_captcha_audio_files.audioFileSuffix')];
-                    $this->session->put('tejas_captcha_params.inprogress', false);
-                    return json_encode($audiofile);
-                }
+                $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
+              } //
+
+              $this->tts = $this->session->get('tejas_captcha_audio_files.tts');
+
+              $text = "-b $this->osBasePath -d $this->osAudioDirectory -c $this->tts -s $this->audioFileSuffix";
+
+              $process = new Process("python3 ../vendor/tejas/tejascaptcha/src/scripts/script.py {$text}");
+              $process->run();
+              // executes after the command finishes
+              if (! $process->isSuccessful()) {
+                  throw new ProcessFailedException($process);
+              }elseif ($process->isSuccessful()) {
+                  $audiofile = ['audiofile' => $this->session->get('tejas_captcha_audio_files.audioFileSuffix')];
+                  $this->session->put('tejas_captcha_params.inprogress', false);
+                  return json_encode($audiofile);
              }
           }
-      }
+       }
+    }
 
-    public function getTejasCaptchaAudio(TejasCaptcha $tejascaptcha, $id)
-    {
+    public function getTejasCaptchaAudio(TejasCaptcha $tejascaptcha, $id) {
 
         if($this->session->has('tejas_captcha_audio_files')) {
-          $this->osAudioDirectory = $this->session->get('tejas_captcha_audio_files.osAudioDirectory');
-          $this->audioFilePrefix = $this->session->get('tejas_captcha_audio_files.audioFilePrefix');
-          $this->audioFileSuffix = $this->session->get('tejas_captcha_audio_files.audioFileSuffix');
-          $this->audioArray = $this->session->get("tejas_captcha_audio_files.audioFileSuffixes");
-          $this->tts = $this->session->get('tejas_captcha_audio_files.tts');
 
-          // 'tejas_captcha_audio_files' [
-          //   "tts" => "15+6="
-          //   "storeAudioInSession" => false
-          //   "osBasePath" => "/var/www/dev.173.255.195.42
-          //   "osAudioDirectory" = /resources/audio" specified in config file tejascaptcha.php
-          //   "audioFilePrefix" => "final"
-          //   "audioFileSuffix" => "_6205695343759841151"
-          // ]
+          $this->getSessionAudio();
 
           if($this->storeAudioInSession) {
               //$this->session->remove('tejas_captcha_audio_files');
 
-          }elseif ($this->osAudioDirectory !== null && $this->osBasePath !== null) {
-
-              if(strpos($this->osAudioDirectory, '/') !== 0) {
-                $this->osAudioDirectory = '/' . $this->osAudioDirectory;
-              }
+          }elseif ($this->osBasePath !== null && $this->osAudioDirectory !== null && $this->osAudioStoragePath !== null) {
 
               $extensions = ['mp3', 'ogg', 'wav'];
               $pattern = '/\./';
@@ -217,12 +211,12 @@ class TejasCaptchaController extends Controller
 
                 if((count($name_tokens)) == 2 && $name_tokens[0] == 'captcha') {
 
-                    if(file_exists($this->osBasePath . $this->osAudioDirectory . '/' . $this->audioFilePrefix . '_' . $name_tokens[1])) {
+                    if(file_exists($this->osAudioStoragePath . '/' . $this->audioFilePrefix . '_' . $name_tokens[1])) {
 
-                          $fileContents = file_get_contents($this->osBasePath . $this->osAudioDirectory . '/' . $this->audioFilePrefix . '_' . $name_tokens[1]);
+                          $fileContents = file_get_contents($this->osAudioStoragePath . '/' . $this->audioFilePrefix . '_' . $name_tokens[1]);
 
                           $options = Array();
-                          $options['path'] = '/var/www/dev.173.255.195.42/resources/audio';
+                          $options['path'] = $this->osAudioStoragePath;
                           $options['filenames'] = $this->audioArray;
 
                           $this->cleanup->gc($options);
@@ -263,28 +257,6 @@ class TejasCaptchaController extends Controller
             }
         }
   }
-
-  // /**
-  //   * get audio silence
-  //   *
-  //   */
-  //  public function getAudioSilence()
-  //  {
-  //      if(file_exists('../vendor/tejas/tejascaptcha/src/scripts/audio/250-milliseconds-of-silence.mp3')) {
-  //          $fileContents = file_get_contents('../vendor/tejas/tejascaptcha/src/scripts/audio/250-milliseconds-of-silence.mp3');
-  //          return response($fileContents)
-  //                  ->withHeaders([
-  //                      'Content-type' => 'audio/mpeg',
-  //                      'Cache-Control' => 'no-cache',
-  //                      'Content-Disposition' =>  'inline',  //'attachment; filename="captcha_audio_sss.mp3"',
-  //                  ]);
-  //      }else{
-  //
-  //          echo 'File does not exist 250-miliseconds-of-silence.mp3';
-  //      }
-  //
-  //  }
-
 
     /**
      * get CAPTCHA
