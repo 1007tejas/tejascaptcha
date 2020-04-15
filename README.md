@@ -1,8 +1,10 @@
 # Tejas Captcha for Laravel 5
 
-A service provider for [Laravel 5](http://www.laravel.com/). Capabilities include refresh, audio and captcha type randomization. Types are regular character or math problem captchas.
+TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  The package rendomley generates either an alpha numeric captcha or a math captcha. The TejasCaptcha interface has both refresh and audio capabities.
 
 ## Preview
+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha preview")
 
 ## Installation
 
