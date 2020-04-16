@@ -31,10 +31,10 @@ The TejasCaptcha Service Provider can be installed via [Composer](http://getcomp
     "prefer-stable": "true,
 ```
 
-From your projects root directory open a terminal and run `composer update`.
+From your projects root directory open a terminal and run #####composer update.
 
 
-### config/app.php
+#### - config/app.php
 
 To use the Tejas Captcha Service Provider, you must register the provider when bootstrapping your Laravel 5 application.
 
