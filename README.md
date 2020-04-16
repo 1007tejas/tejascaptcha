@@ -41,6 +41,8 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
 From your projects root directory, open a terminal and run ```composer update```.
 
 
+![The vendor publish image is not available](assets/githubReadme/images/tejasCaptchaComposerUpdate.png?raw=true "TejasCaptcha Composer Update")
+
 
 ####  config/app.php
 
@@ -64,6 +66,34 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
         'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
+
+
+####  middleware
+
+
+Copy the `vendor/tejas/tejascaptcha/example/app/Http/Middleware/VerifyTejasCaptcha.php` file to
+your projects `app/Http/Middleware/` folder.
+
+
+```VerifyTejasCaptcha.php file contents
+
+<?php
+
+namespace App\Http\Middleware;
+
+use Tejas\TejasCaptcha\Http\Middleware\VerifyTejasCaptcha as Middleware;
+
+class VerifyTejasCaptcha extends Middleware
+{
+    /*
+      Uses the tejas/tejascaptcha service providers middleware
+    */
+}
+```
+
+
+![The VerifyTejasCaptcha middleware image is not available](assets/githubReadme/images/tejasCaptchaVerifyMiddlewareStub.png?raw=true "TejasCaptcha Service  Provider Alias")
+
 
 
 ## Configuration
