@@ -1,6 +1,6 @@
 # Tejas Captcha for Laravel 5
 
-TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  The package rendomley generates either an alpha numeric captcha or a math captcha. The TejasCaptcha interface has both refresh and audio capabities.
+TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  The package randomly generates either an alpha numeric captcha or a math captcha. The TejasCaptcha interface has both refresh and audio capabilities.
 
 ## Preview
 
@@ -8,28 +8,30 @@ TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  Th
 
 ## Installation
 
-The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org) by requiring the
-`tejascaptcha` package and setting the `minimum-stability` to `dev` (required for Laravel 5) in your
-project's `composer.json` then `composer update`
+The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
-```json
+```composer.json
+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
+
 {
     "require": {
-        "laravel/framework": "5.0.*",
-        "tejascaptcha": ">1.0"
+        "..."
+        "tejas/tejascaptcha": "^1.0.0",
     },
+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer minimum-stability")
+
     "minimum-stability": "dev"
 }
 ```
 
+From your projects root directory open a terminal and run `composer update`.
+
 or
 
-Require this package with composer:
-```
-composer require tejascaptcha
-```
-
-Update your packages with ```composer update``` or install with ```composer install```.
+Require the `tejas/tejascaptcha` package with composer:
+From your projects root directory open a terminal and run `composer require tejascaptcha`
 
 In Windows, you'll need to confirm that the following files are included in the ```php.ini file``` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
 
