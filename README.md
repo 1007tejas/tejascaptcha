@@ -12,13 +12,12 @@ TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  Th
 The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
 
-#### - composer.json
+####  composer.json
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
 
 ```
-{,
-    "require": {
+     "require": {
         "..."
         "tejas/tejascaptcha": "^1.0.0",
     },
@@ -31,16 +30,14 @@ The TejasCaptcha Service Provider can be installed via [Composer](http://getcomp
     "prefer-stable": "true,
 ```
 
-From your projects root directory open a terminal and run ```composer update```.
+From your projects root directory, open a terminal and run ```composer update```.
 
 
-#### - config/app.php
+####  config/app.php
 
-To use the Tejas Captcha Service Provider, you must register the provider when bootstrapping your Laravel 5 application.
+Register the `tejas/tejascaptcha` service provider under the `providers` key in `config/app.php`.
 
-Find the `providers` key in `config/app.php`.
-
-for Laravel 5.1+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaProvider1.png?raw=true "TejasCaptcha Service Provider")
 
 ```php
     'providers' => [
@@ -51,7 +48,8 @@ for Laravel 5.1+
 
 Find the `aliases` key in `config/app.php`.
 
-for Laravel 5.1+
+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaProvider3.png?raw=true "TejasCaptcha Service  Provider Alias")
 
 ```php
     'aliases' => [
@@ -59,7 +57,8 @@ for Laravel 5.1+
         'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
-```Windows```
+
+####  Windows```
 
 In Windows, you'll need to confirm that the following files are included in your `php.ini` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
 
