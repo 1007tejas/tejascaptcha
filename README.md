@@ -35,7 +35,7 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
 
 ```
     "minimum-stability": "dev",
-    "prefer-stable": "true,
+    "prefer-stable": true,
 ```
 
 From your projects root directory, open a terminal and run ```composer update```.
@@ -74,7 +74,7 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 #### publish
 
 
-To use your own settings run Laravels `vendor:publish` artisan command from your projects root directory.
+To customize tejas/tejascaptcha's settings run Laravels `vendor:publish` artisan command from your projects root directory.
 Example output:
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaVendorPublish.png?raw=true "TejasCaptcha Service  Provider Alias")
