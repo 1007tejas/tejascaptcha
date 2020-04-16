@@ -12,7 +12,7 @@ TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  Th
 The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
 
-### composer.json
+#### - composer.json
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
 
