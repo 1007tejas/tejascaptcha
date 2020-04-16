@@ -20,15 +20,13 @@ The TejasCaptcha Service Provider can be installed via [Composer](http://getcomp
         "..."
         "tejas/tejascaptcha": "^1.0.0",
     },
-}
 ```
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerMinStability.png?raw=true "TejasCaptcha composer minimum-stability")
 
 ```
-}
-    "minimum-stability": "dev"
-}
+    "minimum-stability": "dev",
+    "prefer-stable": "true,
 ```
 
 From your projects root directory open a terminal and run `composer update`.
