@@ -6,6 +6,7 @@ TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  Th
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha preview")
 
+
 ## Installation
 
 The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
@@ -15,7 +16,7 @@ The TejasCaptcha Service Provider can be installed via [Composer](http://getcomp
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
 
 ```
-{
+{,
     "require": {
         "..."
         "tejas/tejascaptcha": "^1.0.0",
@@ -36,14 +37,12 @@ or
 Require the `tejas/tejascaptcha` package with composer:
 From your projects root directory open a terminal and run `composer require tejascaptcha`
 
-In Windows, you'll need to confirm that the following files are included in the ```php.ini file``` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
 
-
-## Usage
+```config/app.php```
 
 To use the Tejas Captcha Service Provider, you must register the provider when bootstrapping your Laravel 5 application.
 
-Find the `providers` key in `config/app.php` and register the Tejas Captcha Service Provider.
+Find the `providers` key in `config/app.php`.
 
 for Laravel 5.1+
 
@@ -64,6 +63,10 @@ for Laravel 5.1+
         'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
+```Windows```
+
+In Windows, you'll need to confirm that the following files are included in your `php.ini` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
+
 
 ## Configuration
 
