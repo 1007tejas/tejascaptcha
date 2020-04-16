@@ -1,72 +1,91 @@
 # Tejas Captcha for Laravel 5
 
-A service provider for [Laravel 5](http://www.laravel.com/). Capabilities include refresh, audio and captcha type randomization. Types are regular character or math problem captchas.
+The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  The package randomly generates either an alpha numeric captcha or a math captcha and provides both refresh and audio capabilities.
 
 ## Preview
 
+![The preview image is not available](assets/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha preview")
+
+
+
+## Compatibility
+
+The tejas/tejascaptcha service provider runs on Linux and BSD like OS's and appropiate web servers.
+
+
 ## Installation
 
-The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org) by requiring the
-`tejascaptcha` package and setting the `minimum-stability` to `dev` (required for Laravel 5) in your
-project's `composer.json` then `composer update`
+The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
-```json
-{
-    "require": {
-        "laravel/framework": "5.0.*",
-        "tejascaptcha": ">1.0"
+
+
+####  composer.json
+
+
+![The composer require image is not available](assets/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
+
+```
+     "require": {
+        "..."
+        "tejas/tejascaptcha": "^1.0.0",
     },
-    "minimum-stability": "dev"
-}
 ```
 
-or
+![The composer minimum-stability image is not available](assets/githubReadme/images/tejasCaptchaComposerMinStability.png?raw=true "TejasCaptcha composer minimum-stability")
 
-Require this package with composer:
 ```
-composer require tejascaptcha
+    "minimum-stability": "dev",
+    "prefer-stable": true,
 ```
 
-Update your packages with ```composer update``` or install with ```composer install```.
-
-In Windows, you'll need to confirm that the following files are included in the ```php.ini file``` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
+From your projects root directory, open a terminal and run ```composer update```.
 
 
-## Usage
 
-To use the Tejas Captcha Service Provider, you must register the provider when bootstrapping your Laravel 5 application.
+####  config/app.php
 
-Find the `providers` key in `config/app.php` and register the Tejas Captcha Service Provider.
 
-for Laravel 5.1+
+Register the `tejas/tejascaptcha` service provider under the `providers` key in `config/app.php`.
+
+![The providers image is not available](assets/githubReadme/images/tejasCaptchaProvider1.png?raw=true "TejasCaptcha Service Provider")
 
 ```php
     'providers' => [
-        // ...
         TejasCaptchaServiceProvider::class,
     ]
 ```
 
-Find the `aliases` key in `config/app.php`.
+Register the `tejas/tejascaptcha` service providers alias under the `aliases` key in `config/app.php`.
 
-for Laravel 5.1+
+![The providers alias image is not available](assets/githubReadme/images/tejasCaptchaProvider3.png?raw=true "TejasCaptcha Service  Provider Alias")
 
 ```php
     'aliases' => [
-        // ...
         'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
 
+
 ## Configuration
 
-To use your own settings, publish the 'your_project/config' directory.
+
+#### publish
+
+
+To customize tejas/tejascaptcha's settings run Laravels `vendor:publish` artisan command from your projects root directory.
+
+
 ```php
 $ php artisan vendor:publish
 ```
-Then in your Laravel projects config.php modify the settings.
 
-edit `config.php`
+Example output:
+
+![The vendor publish image is not available](assets/githubReadme/images/tejasCaptchaVendorPublish.png?raw=true "TejasCaptcha Service  Provider Alias")
+
+
+An editable copy of tejas/tejascaptcha's config file should have been copied to your projects `config` directory,
+You can now edit `config/tejascaptcha.php`.
 
 ```php
 return [
