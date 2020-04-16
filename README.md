@@ -13,15 +13,21 @@ The TejasCaptcha Service Provider can be installed via [Composer](http://getcomp
 ```composer.json
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
-
+}
+```
 {
     "require": {
         "..."
         "tejas/tejascaptcha": "^1.0.0",
     },
+}
+```
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer minimum-stability")
 
+
+```
+}
     "minimum-stability": "dev"
 }
 ```
