@@ -7,13 +7,20 @@ TejasCaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  Th
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha preview")
 
 
+
+## Compatibility
+
+The tejas/tejascaptcha service provider runs on Linux/BSD like web servers.
+
+
 ## Installation
 
-The TejasCaptcha Service Provider can be installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
+The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
 
 
 ####  composer.json
+
 
 ![The preview image is not available](example/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
 
@@ -36,6 +43,7 @@ From your projects root directory, open a terminal and run ```composer update```
 
 
 ####  config/app.php
+
 
 Register the `tejas/tejascaptcha` service provider under the `providers` key in `config/app.php`.
 
@@ -60,18 +68,23 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 ```
 
 
-####  Windows
-
-In Windows, you'll need to confirm that the following files are included in your `php.ini` file; add them if needed.  `php_gd2.dll`, `php_fileinfo.dll` and `php_mbstring.dll`. These files are required for `tejascaptcha` and its dependencies.
-
-
-
 ## Configuration
 
-To use your own settings, publish the 'your_project/config' directory.
+
+#### publish
+
+
+To use your own settings run Laravels `vendor:publish` artisan command from your projects root directory.
+Example output:
+
+![The preview image is not available](example/githubReadme/images/tejasCaptchaVendorPublish.png?raw=true "TejasCaptcha Service  Provider Alias")
+
+
 ```php
 $ php artisan vendor:publish
 ```
+
+
 Then in your Laravel projects config.php modify the settings.
 
 edit `config.php`
