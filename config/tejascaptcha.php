@@ -39,7 +39,7 @@ return [
     ],
     'audio' => [
         'storeAudioInSession' => false,
-        'osAudioDirectory' => '/storage/audio',
+        'osAudioDirectory' => '/storage/app/audio',
         'audioFilePrefix' => 'final'
     ]
 ];
