@@ -1,7 +1,8 @@
 <?php
 // Place a copy of this  file in app/config if you want to modify the default values
 return [
-    'default' => [
+    'config_section_key' => 'standard',
+    'standard' => [
         'length' => 5,
         'width' => 230,
         'height' => 50,

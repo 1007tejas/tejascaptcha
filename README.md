@@ -1,6 +1,6 @@
 # Tejas Captcha for Laravel 5
 
-The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.com/).  The package randomly generates either an alpha numeric captcha or a math captcha and provides both refresh and audio capabilities.
+The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.com).  The package randomly generates either an alpha numeric captcha or a math captcha and provides both refresh and audio capabilities.
 
 ## Preview
 
@@ -10,7 +10,7 @@ The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.
 
 ## Compatibility
 
-The tejas/tejascaptcha service provider runs on Linux and BSD like OS's and appropiate web servers.
+The tejas/tejascaptcha service provider runs on Linux and like OS's on an appropriate web server.
 
 
 ## Installation
@@ -26,7 +26,6 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
 
 ```
      "require": {
-        "..."
         "tejas/tejascaptcha": "^1.0.0",
     },
 ```
@@ -70,13 +69,14 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 
 ####  middleware
 
+The tejas/tejascaptcha middleware verifies that the submitted captcha has been correctly entered.
 
-Copy the `vendor/tejas/tejascaptcha/example/app/Http/Middleware/VerifyTejasCaptcha.php` file to
-your projects `app/Http/Middleware/` folder.
+From your projects root directory copy the `vendor/tejas/tejascaptcha/example/app/Http/Middleware/VerifyTejasCaptcha.php` file to
+your projects `app/Http/Middleware/` folder. This file points to the actual middleware verification
+code found in the `tejas/tejascaptcha` package.
 
 
-```VerifyTejasCaptcha.php file contents
-
+```
 <?php
 
 namespace App\Http\Middleware;
@@ -114,8 +114,7 @@ Example output:
 ![The vendor publish image is not available](assets/githubReadme/images/tejasCaptchaVendorPublish.png?raw=true "TejasCaptcha Service  Provider Alias")
 
 
-An editable copy of tejas/tejascaptcha's config file should have been copied to your projects `config` directory,
-You can now edit `config/tejascaptcha.php`.
+An editable copy of tejas/tejascaptcha's config file, `tejascaptcha.php`, should have been copied to your projects `config` directory.
 
 ```php
 return [
@@ -131,22 +130,6 @@ return [
 
 ## Example Usage Only
 
-```php
-    // switching to middleware
-    // [your site path]/routes/web.php
-    Route::any(-test', function() {
-        if (request()->getMethod() == 'POST') {
-            $rules = [' => 'required'];
-            $validator = validator()->make(request()->all(), $rules);
-            if ($validator->fails()) {
-                echo '<p style="color: #ff0000;">Incorrect!</p>';
-            } else {
-                echo '<p style="color: #00ff30;">Matched :)</p>';
-            }
-        }
-
-    });
-```
 
 ```php
     TejasCaptcha was developed using the following node packages:
@@ -164,11 +147,11 @@ return [
 ```php
     TejasCaptcha was developed using the following composer package:
 
-        "laravelcollective/html": "5.8.*"
+        "laravelcollective/html": "^6.0"
 
     To add the package:
         At the root of your Laravel project open 'composer.json'
-        add the above package to the `require` and `require-dev sections`.
+        add the above package to the `require` sections`.
         Note: Versions will vary over time.
 ```
 

@@ -256,12 +256,30 @@ class TejasCaptcha
      * @param string $config
      * @return void
      */
-    protected function configure($config_section = 'default')
+    protected function configure()
     {
-        if ($this->config_repository->has('tejascaptcha.' . $config_section)) {
-            foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
-                $this->{$key} = $val;
+        $cfs = [ // standard settings
+            'length' => 5,
+            'width' => 230,
+            'height' => 50,
+            'quality' => 90,
+            'sensitive' => false,
+        ];
+
+        if ($this->config_repository->has('tejascaptcha.' . 'config_section_key')) {
+            $cf = $this->config_repository->get('tejascaptcha.config_section_key');
+            if ($this->config_repository->has('tejascaptcha.' . $cf)) {
+                $config_section = $cf;
+            }else{
+                $this->config_repository->set('tejascaptcha.standard' . $cfs);
+                $config_section = 'standard';
             }
+        }else{
+            $this->config_repository->set('tejascaptcha.standard' . $cfs);
+            $config_section = 'standard';
+        }
+        foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
+            $this->{$key} = $val;
         }
 
         // math and math_generated are not configuration items but they
@@ -288,7 +306,7 @@ class TejasCaptcha
      * @param boolean $api
      * @return imageManager->response
      */
-    public function create($config_section = 'default', $api = false)
+    public function create($api = false)
     {
         $this->backgrounds = $this->filesystem->files(__DIR__ . '/../assets/backgrounds');
         $this->fonts = $this->filesystem->files(__DIR__ . '/../assets/fonts');
@@ -301,7 +319,7 @@ class TejasCaptcha
 
         $this->fonts = array_values($this->fonts); //reset fonts array index
 
-        $this->configure($config_section);
+        $this->configure();
 
         if($this->math_generated) {
             $this->math_generated = 0;
