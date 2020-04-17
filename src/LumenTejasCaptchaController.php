@@ -19,6 +19,6 @@ class LumenTejasCaptchaController extends Controller
      */
     public function getCaptcha(TejasCaptcha $tejascaptcha, $config = 'default')
     {
-        return $tejascaptcha->create($config);
+        return $tejascaptcha->create();
     }
 }

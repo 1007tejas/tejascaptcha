@@ -263,24 +263,31 @@ class TejasCaptcha
             'width' => 230,
             'height' => 50,
             'quality' => 90,
-            'sensitive' => false,
+            'sensitive' => false
         ];
 
-        if ($this->config_repository->has('tejascaptcha.' . 'config_section_key')) {
-            $cf = $this->config_repository->get('tejascaptcha.config_section_key');
-            if ($this->config_repository->has('tejascaptcha.' . $cf)) {
-                $config_section = $cf;
+        if ($this->config_repository->has('tejascaptcha.config_section_key')) {
+            $csk = $this->config_repository->get('tejascaptcha.config_section_key');
+            if ($this->config_repository->has('tejascaptcha.' . $csk)) {
+                $config_section = $csk;
+                foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
+                    $this->{$key} = $val;
+                }
             }else{
-                $this->config_repository->set('tejascaptcha.standard' . $cfs);
+                foreach ($cfs as $key => $val) {
+                    $this->config_repository->set('tejascaptcha.standard.' . $key, $val);
+                    $this->{$key} = $val;
+                }
                 $config_section = 'standard';
             }
         }else{
-            $this->config_repository->set('tejascaptcha.standard' . $cfs);
+            foreach ($cfs as $key => $val) {
+                $this->config_repository->set('tejascaptcha.standard.' . $key, $val);
+                $this->{$key} = $val;
+            }
             $config_section = 'standard';
         }
-        foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
-            $this->{$key} = $val;
-        }
+
 
         // math and math_generated are not configuration items but they
         // need to persist across captcha refreshes, initialize them here.

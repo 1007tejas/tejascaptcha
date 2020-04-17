@@ -8,7 +8,7 @@ if (!function_exists('TejasCaptcha')) {
      */
     function TejasCaptcha($config = 'default')
     {
-        return app('tejascaptcha')->create($config);
+        return app('tejascaptcha')->create();
     }
 }
 

@@ -97,14 +97,15 @@ class TejasCaptchaServiceProvider extends ServiceProvider
             __DIR__ . '/../config/tejascaptcha.php', 'tejascaptcha'
         );
 
-        // foreach ($this->app['config']->get('tejascaptcha.default') as $key => $val) {
+        // $csk = $this->app['config']->get('tejascaptcha.config_section_key');
+        // foreach ($this->app['config']->get('tejascaptcha.' . $csk) as $key => $val) {
         //     echo $key . ' = ' . $val . '<br>';
         // }
         // foreach ($this->app['config']->get('tejascaptcha.audio') as $key => $val) {
         //     echo $key . ' = ' . $val . '<br>';
         // }
         // echo base_path();
-        //exit;
+        // exit;
         // Bind tejascaptcha
         $this->app->singleton('tejascaptcha', function ($app) {
             return new TejasCaptcha(

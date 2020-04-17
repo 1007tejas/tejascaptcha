@@ -270,7 +270,7 @@ class TejasCaptchaController extends Controller
         if (ob_get_contents()) {
             ob_clean();
         }
-        $result = $tejascaptcha->create($config);
+        $result = $tejascaptcha->create();
         $this->session->put('tejas_captcha_params.inprogress', false);
         return $result;
     }
@@ -284,7 +284,7 @@ class TejasCaptchaController extends Controller
      */
     public function getCaptchaApi(TejasCaptcha $tejascaptcha, $config = 'default')
     {
-      $result = $tejascaptcha->create($config);
+      $result = $tejascaptcha->create();
       $this->session->put('tejas_captcha_params.inprogress', false);
       return $result;
     }
