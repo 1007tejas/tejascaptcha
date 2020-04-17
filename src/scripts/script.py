@@ -2,6 +2,7 @@
 
 import os, getopt, re, sys, shlex, subprocess
 import queue, threading
+# import logging
 
 jobQueue = queue.Queue(3000)
 threads = []
@@ -41,20 +42,25 @@ def createAudio(audioType, filenameSuffix, osAudioDirectoryTemp, **audioText):
     doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio2']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio2' + threadLocalData2.filenameSuffix+ '.wav')
     doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio3']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio3' + threadLocalData2.filenameSuffix+ '.wav')
     if 'regularCaptcha' in threadLocalData2.audioType:
-        doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 120 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.filenameSuffix+ '.wav')
+        doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 115 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.filenameSuffix+ '.wav')
     elif 'mathCaptcha' in threadLocalData2.audioType:
         doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 145 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.filenameSuffix+ '.wav')
 
 def threadJob():
+
+    # logging.basicConfig(filename='/var/www/dev.173.255.195.42/storage/app/script.log',level=logging.DEBUG)
+    # logging.debug('This message should go to the log file')
 
     threadLocalData1 = threading.local()
     threadLocalData1.osBasePath = None
     threadLocalData1.osAudioDirectory = None
     threadLocalData1.osAudioStoragePath = None
     threadLocalData1.osAudioDirectoryTemp = None
-    threadLocalData1.spacedData = None
     threadLocalData1.audioType = None
     threadLocalData1.audioText = None
+    threadLocalData1.captchaData = None
+    threadLocalData1.filenameSuffix = None
+    threadLocalData1.spacedData = None
     threadLocalData1.item = None
     threadLocalData1.f = None
     threadLocalData1.l = None
@@ -147,10 +153,10 @@ def threadJob():
 def usage():
     print('''
 Currently accepting 5 arguements and 4 are required [-b, --osBasePath], [-d, --osAudioDirectory], [-c, --captchaData],  [-s, --filenameSuffix] and [-h, --help]
--b --osBasePath (required) the servers absolute path where the Laravel framework is running.
--d --osAudioDirectory (required) the servers path to the audio storage directory.
--c --captchadata (required) is the captcha's textual content.
--s --filenameSuffix (required) is a string for a random filename.
+-b --osBasePath (required) the servers absolute path to the Laravel framework root directory.
+-d --osAudioDirectory (required) path to the audio storage directory starting from the Laravel framework root directory.
+-c --captchadata (required) is the captcha's textual content, excluding white space.
+-s --filenameSuffix (required) is a constant string, it is appended to a randomly generated filename.
 -h --help prints this message.
 
 '''
