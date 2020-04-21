@@ -1,0 +1,1 @@
+The VerifyTejasCaptcha.php stub middleware file is located in the tejas/tejascaptcha projects 'example' folder. Copy the VerifyTejasCaptcha.php stub middleware file into your projects app/Http/Middleware/ folder.

@@ -318,7 +318,7 @@ class TejasCaptcha
         $this->backgrounds = $this->filesystem->files(__DIR__ . '/../assets/backgrounds');
         $this->fonts = $this->filesystem->files(__DIR__ . '/../assets/fonts');
 
-        if (app()->version() >= 5.5) {
+        if (floatval(app()->version()) >= 5.5) {
             $this->fonts = array_map(function ($file) {
                 return $file->getPathName();
             }, $this->fonts);

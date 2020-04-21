@@ -1,6 +1,6 @@
 test: remove-deps
 	make test-laravel
-	make test-lumen
+	# make test-lumen
 
 test-laravel:
 	composer require laravel/framework
@@ -8,9 +8,9 @@ test-laravel:
 	make uninstall-laravel
 
 test-lumen:
-	composer require laravel/lumen-framework
-	vendor/bin/phpunit
-	make uninstall-lumen
+	# composer require laravel/lumen-framework
+	# vendor/bin/phpunit
+	# make uninstall-lumen
 
 remove-deps:
 	rm -rf vendor

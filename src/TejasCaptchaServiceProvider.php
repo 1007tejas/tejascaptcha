@@ -38,47 +38,19 @@ class TejasCaptchaServiceProvider extends ServiceProvider
         ], 'config');
 
         // HTTP routing
-        //if (strpos($this->app->version(), 'Lumen') !== false) {
-            // $this->app->get('tejascaptcha[/api/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptchaApi');
-            //$this->app->get('tejascaptcha[/{config}]', 'Tejas\TejasCaptcha\LumenTejasCaptchaController@getCaptcha');
-      //  } else {
-            if(( $this->session->has('tejas_captcha_params')
-                 && $this->session->has('tejas_captcha_params.inprogress')
-                 && $this->session->get('tejas_captcha_params.inprogress') === false)
-                 || ( !$this->session->has('tejas_captcha_params')
-                 || !$this->session->has('tejas_captcha_params.inprogress') )) {
 
-                $this->session->put('tejas_captcha_params.inprogress', true);
-                $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
-                $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
-            }
-            // $this->app['router']->get('tejascaptcha/audiolence', '\Tejas\TejasCaptcha\TejasCaptchaController@getAudioSilence');
-            $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
-            $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
+        if(( $this->session->has('tejas_captcha_params')
+             && $this->session->has('tejas_captcha_params.inprogress')
+             && $this->session->get('tejas_captcha_params.inprogress') === false)
+             || ( !$this->session->has('tejas_captcha_params')
+             || !$this->session->has('tejas_captcha_params.inprogress') )) {
 
-            //if ((double)$this->app->version() >= 5.2) {
-            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi')->middleware('web');
-            // $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
-            // $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
-            // $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
-            // $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
-            //} else {
-            // $this->app['router']->get('tejascaptcha/api/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptchaApi');
-            //     $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
-            //     $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
-            //     $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
-            //     $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
-        //}
-
-        // // Validator extensions
-        // $this->app['validator']->extend('tejascaptcha', function ($attribute, $value, $parameters) {
-        //     return captcha_check($value);
-        // });
-        //
-        // // Validator extensions
-        // $this->app['validator']->extend('captcha_api', function ($attribute, $value, $parameters) {
-        //     return captcha_api_check($value, $parameters[0]);
-        // });
+            $this->session->put('tejas_captcha_params.inprogress', true);
+            $this->app['router']->post('tejascaptcha/create_audio', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaCreateAudio')->middleware('web');
+            $this->app['router']->get('tejascaptcha/audio/{id}', '\Tejas\TejasCaptcha\TejasCaptchaController@getTejasCaptchaAudio')->middleware('web');
+        }
+        $this->app['router']->get('tejascaptcha/{config?}', '\Tejas\TejasCaptcha\TejasCaptchaController@getCaptcha')->middleware('web');
+        $this->app['router']->post('tejascaptcha/image', '\Tejas\TejasCaptcha\TejasCaptchaController@postTejasCaptchaImage')->middleware('web');
     }
 
     /**
@@ -88,24 +60,12 @@ class TejasCaptchaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-      //$app->singleton('app', 'Illuminate\Container\Container');
-      //$app->singleton('config', 'Illuminate\Config\Repository');
         // Merge configs
 
         $this->mergeConfigFrom(
             __DIR__ . '/../config/tejascaptcha.php', 'tejascaptcha'
         );
 
-        // $csk = $this->app['config']->get('tejascaptcha.config_section_key');
-        // foreach ($this->app['config']->get('tejascaptcha.' . $csk) as $key => $val) {
-        //     echo $key . ' = ' . $val . '<br>';
-        // }
-        // foreach ($this->app['config']->get('tejascaptcha.audio') as $key => $val) {
-        //     echo $key . ' = ' . $val . '<br>';
-        // }
-        // echo base_path();
-        // exit;
         // Bind tejascaptcha
         $this->app->singleton('tejascaptcha', function ($app) {
             return new TejasCaptcha(

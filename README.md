@@ -1,6 +1,19 @@
-# Tejas Captcha for Laravel 5
+# Tejas Captcha for the Laravel framework
 
-The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.com).  The package randomly generates either an alpha numeric captcha or a math captcha and provides both refresh and audio capabilities.
+The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.com).  The package randomly generates either an alpha numeric captcha or a math captcha and provides both refresh and audio capabilities.
+
+### Section links
+* [Preview](#preview)
+* [Compatibility](#compatibility)
+* [Installation](#installation)
+     * [Composer](#composer)
+     * [Register the TejasCaptcha service provider](#register-the-tejascaptcha-service-provider)
+     * [Middleware](#middleware)
+     * [Audio Directory](#audio-directory)
+
+* [Configuration](#configuration)
+     * [Publish the configuration file](#publish-the-configuration-file)
+
 
 ## Preview
 
@@ -10,16 +23,19 @@ The tejas/tejascaptcha is a service provider for [Laravel 5](http://www.laravel.
 
 ## Compatibility
 
-The tejas/tejascaptcha service provider runs on Linux and like OS's on an appropriate web server.
+The tejas/tejascaptcha service provider has been tested with Laravel versions 5, 6 and 7. Test were performed on a Linux / Debian / Apache2 web server.
 
 
 ## Installation
 
-The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your laravel projects composer.json file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
+
+#### Composer
+
+The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your laravel projects `composer.json` file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
 
 
 
-####  composer.json
+##### composer.json
 
 
 ![The composer require image is not available](assets/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha composer require section")
@@ -43,7 +59,9 @@ From your projects root directory, open a terminal and run ```composer update```
 ![The vendor publish image is not available](assets/githubReadme/images/tejasCaptchaComposerUpdate.png?raw=true "TejasCaptcha Composer Update")
 
 
-####  config/app.php
+#### Register the TejasCaptcha service provider
+
+##### config/app.php
 
 
 Register the `tejas/tejascaptcha` service provider under the `providers` key in `config/app.php`.
@@ -67,14 +85,18 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 ```
 
 
-####  middleware
+#### Middleware
+
+#####  tejascaptcha.php
+
 
 The tejas/tejascaptcha middleware verifies that the submitted captcha has been correctly entered.
 
-From your projects root directory copy the `vendor/tejas/tejascaptcha/example/app/Http/Middleware/VerifyTejasCaptcha.php` file to
-your projects `app/Http/Middleware/` folder. This file points to the actual middleware verification
-code found in the `tejas/tejascaptcha` package.
+There are two middleware files in the tejas/tejascaptcha package.
 
+The first is the stub file, named `VerifyTejasCaptcha.php`, and it is located in the `tejas/tejascaptcha/src/app/Http/Middleware` folder. Place a copy of this file in your projects `app/Http/Middleware` folder.
+
+Contents of the stub file:
 
 ```
 <?php
@@ -95,11 +117,28 @@ class VerifyTejasCaptcha extends Middleware
 ![The VerifyTejasCaptcha middleware image is not available](assets/githubReadme/images/tejasCaptchaVerifyMiddlewareStub.png?raw=true "TejasCaptcha Service  Provider Alias")
 
 
+ :small_red_triangle:Nothing should be done with the second middleware file.
+
+The second middleware file verifies that the current captcha matches the users response. This file is also named `VerifyTejasCaptcha.php`, but it is located in the `tejas/tejascaptcha/src/Http/Middleware` folder. Nothing should be done with this second middleware file.
+
+
+#### Audio directory
+
+##### storage/audio
+
+The default directory for writing audio files, starting from the root of your project, is `storage/audio`. This directory is specified in the  :small_red_triangle:`tejascaptcha configuration` file and may be changed according to your preference. The `audio` directory must exist and have read / write permissions set for your web servers user. e.g. www-data for Apache2.
+
+ :small_red_triangle:see Configuration section below.
+
+
 
 ## Configuration
 
 
-#### publish
+#### Publish the configuration file
+
+
+##### tejascaptcha.php
 
 
 To customize tejas/tejascaptcha's settings run Laravels `vendor:publish` artisan command from your projects root directory.
@@ -114,7 +153,7 @@ Example output:
 ![The vendor publish image is not available](assets/githubReadme/images/tejasCaptchaVendorPublish.png?raw=true "TejasCaptcha Service  Provider Alias")
 
 
-An editable copy of tejas/tejascaptcha's config file, `tejascaptcha.php`, should have been copied to your projects `config` directory.
+Type the number associated with tejascaptcha service provider and press enter. An editable copy of tejas/tejascaptcha's config file, `tejascaptcha.php`, should have been copied to your projects `config` directory.
 
 ```php
 return [

@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Part of Laravel 5 TejasCaptcha package
+ * Part of Laravel TejasCaptcha package
  *
  * @copyright
  * @version
@@ -60,7 +60,7 @@ class TejasCaptchaSessionCleanup {
   protected $filecount;
 
     /**
-    * Create a new TejasCaptcha garbage collector
+    * Construct a TejasCaptcha garbage collector
     */
     public function __construct()
     {

@@ -2,15 +2,17 @@
 //Tejas Captcha'.
     function FixCaptchaLabelInput(response = null) {
         if(response) {
-            if(response['alt'] == 1) {
+            if(response['alt'] === 1) {
                 $('#captchaImageLabel').html('Enter the Answer');
                 $('#captcha_response').attr({placeholder: 'Answer for the Math Problem (required)', title: 'Enter the Answer to the Captcha Math Problem required' });
-            } else if(response['alt'] == 0) {
+            } else if(response['alt'] === 0) {
                 $('#captchaImageLabel').html('Enter the Captcha');
                 $('#captcha_response').attr({placeholder: 'Captcha Code (required)', title: 'Enter the Captcha Code required' });
-            }else{
-                $('#captchaImageLabel').html('The Server returned an incorrect Captcha');
-                $('#captcha_response').attr({placeholder: 'The Server returned: ' + response['alt'], title: 'The Server returned an incorrect Captcha' });
+            } else {
+                $('#captchaImageLabel').html('The Server returned an incorrect Captcha status');
+                $('#captchaImage').attr({src: '', alt: 'Captcha image unavailable' });
+                $('#captcha_response').attr({placeholder: 'The Server did not return a correct response.', title: 'The Server did not return a correct response.' });
+                $('#tejas_captcha_audio').attr('src', '');
             }
             response['alt'] = '';
         }
@@ -117,7 +119,7 @@
                 // $('#tejas_captcha_audio_icon').prop( "disabled", false );
             },
             error: function( jqXHR, textStatus, errorThrown ) {
-                alert( textStatus + ':::' + errorThrown );
+                //alert( textStatus + ':::' + errorThrown );
                 // $('#tejas_captcha_audio_icon').prop( "disabled", false );
             },
             always: function (jqXHR) {
