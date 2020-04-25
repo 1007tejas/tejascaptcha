@@ -256,7 +256,7 @@ class TejasCaptcha
      * @param string $config
      * @return void
      */
-    protected function configure()
+    protected function configure($config = null)
     {
         $cfs = [ // standard settings
             'length' => 5,
@@ -266,28 +266,31 @@ class TejasCaptcha
             'sensitive' => false
         ];
 
-        if ($this->config_repository->has('tejascaptcha.config_section_key')) {
+        $nocigar = false;
+        if($config === null && $this->config_repository->has('tejascaptcha.config_section_key')) {
             $csk = $this->config_repository->get('tejascaptcha.config_section_key');
             if ($this->config_repository->has('tejascaptcha.' . $csk)) {
-                $config_section = $csk;
-                foreach ($this->config_repository->get('tejascaptcha.' . $config_section) as $key => $val) {
+                foreach ($this->config_repository->get('tejascaptcha.' . $csk) as $key => $val) {
                     $this->{$key} = $val;
                 }
             }else{
+                $nocigar = true;
+            }
+        }
+
+        if($config !== null || $nocigar === true){
+            if ($this->config_repository->has('tejascaptcha.' . $config)) {
+                foreach ($this->config_repository->get('tejascaptcha.' . $config) as $key => $val) {
+                    $this->{$key} = $val;
+                }
+            }else{
+                $this->config_repository->set('tejascaptcha.config_section_key', 'standard');
                 foreach ($cfs as $key => $val) {
                     $this->config_repository->set('tejascaptcha.standard.' . $key, $val);
                     $this->{$key} = $val;
                 }
-                $config_section = 'standard';
             }
-        }else{
-            foreach ($cfs as $key => $val) {
-                $this->config_repository->set('tejascaptcha.standard.' . $key, $val);
-                $this->{$key} = $val;
-            }
-            $config_section = 'standard';
         }
-
 
         // math and math_generated are not configuration items but they
         // need to persist across captcha refreshes, initialize them here.
@@ -313,7 +316,7 @@ class TejasCaptcha
      * @param boolean $api
      * @return imageManager->response
      */
-    public function create($api = false)
+    public function create($config = null, $api = false)
     {
         $this->backgrounds = $this->filesystem->files(__DIR__ . '/../assets/backgrounds');
         $this->fonts = $this->filesystem->files(__DIR__ . '/../assets/fonts');
@@ -326,7 +329,7 @@ class TejasCaptcha
 
         $this->fonts = array_values($this->fonts); //reset fonts array index
 
-        $this->configure();
+        $this->configure($config);
 
         if($this->math_generated) {
             $this->math_generated = 0;
@@ -600,12 +603,28 @@ class TejasCaptcha
     public function image_onAjaxRequest($attrs = null)
     {
       foreach ($attrs as $attr => $value) {
+          $imageType = '';
+          if ($attr == 'tejasCaptchaImageType') continue;
           if ($attr == 'src') {
-              $attrs ['src'] = url('tejascaptcha') . "?" . $this->str_fn->random();
+              if(array_key_exists('tejasCaptchaImageType', $attrs)) {
+                switch ($attrs['tejasCaptchaImageType']) {
+                    case 'flat':
+                        $imageType = 'flat';
+                        break;
+                    case 'mini':
+                        $imageType = 'mini';
+                        break;
+                    case 'inverse':
+                        $imageType = 'inverse';
+                        break;
+                    default:
+                        $imageType = 'standard';
+                }
+              }
+              $attrs ['src'] = url('tejascaptcha/' . $imageType) . "?" . $this->str_fn->random();
           }
           if ($attr == 'alt') {
-            // this never gets to the Dom if the provided jquery ajax is used
-
+            // alt value never gets to the Dom if the provided jquery ajax is used
               $this->math = ( random_int(PHP_INT_MIN, PHP_INT_MAX)%2 == 0 ) ? 1 : 0;
               $attrs['alt'] = $this->math;
               $this->math_generated = 1;
@@ -614,7 +633,6 @@ class TejasCaptcha
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
 
               // Log::debug('image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
-
           }
       }
       return json_encode($attrs);

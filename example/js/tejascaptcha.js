@@ -28,25 +28,31 @@
     }
 
     function audioSourceFilename(filename = null) {
-        if(filename) {
-          $('#tejas_captcha_audio > source').each(function() {
-            var tsrc = this.src;
-            var arrq = tsrc.split('?');
-            var arrn = arrq[0].split('/');
-            var arre = arrn[arrn.length-1].split('.');
+        // On initial page load the audio source format is:
+        //  'captcha' + '.extension'
+        // e.g. <source src="https://mchba.com/tejascaptcha/audio/captcha.mp3"
+        //
+        // After clicking the refresh or speaker volume icon the audio source format is:
+        // 'captcha_' + (random number filename) + '.extension'
+        // e.g. <source src="https://mchba.com/tejascaptcha/audio/captcha_8982442082968605313.mp3"
+        //
+        // *This function works with both formats
+        //
+        $('#tejas_captcha_audio > source').each(function() {
+          var array_url = this.src.split('/');
+          var array_extension = array_url[array_url.length-1].split('.');
 
-            arrn[arrn.length-1] = 'captcha' + filename + '.' + arre[1];
-            var str = recombineUrl(arrn, '/');
+          if(filename) {
+            // clicked on speaker volume icon and ajax returned filename
+            array_url[array_url.length-1] = 'captcha' + filename + '.' + array_extension[1];
+          }else{
+            // Initial page load
+            array_url[array_url.length-1] = 'captcha_' + 1 + Math.floor(Math.random() * 10000) + '.' + array_extension[1];
+          }
 
-            this.src = str;
-          });
-        }else{
-          $('#tejas_captcha_audio > source').each(function() {
-              var tsrc = this.src;
-              var arr = tsrc.split('?');
-              this.src = arr[0] + '?' + 1 + Math.floor(Math.random() * 10000);
-          });
-        }
+          var str = recombineUrl(array_url, '/');
+          this.src = str;
+        });
     }
 
     $('#tejas_captcha_audio_icon').click(function() {
@@ -105,9 +111,9 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $.ajax({
-            url: "tejascaptcha/image",
-            data: {id: 'captchaImage', alt: '', class: 'captcha',  src: ''},
+        $.ajax({ // tejasCaptchaImageType may be one of ['', flat, 'mini', 'inverse', 'standard']
+            url: "tejascaptcha/image",",
+            data: {id: 'captchaImage', alt: '', class: 'captcha',  src: '', tejasCaptchaImageType: ''},
             type: 'post',
             cache: false,
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',

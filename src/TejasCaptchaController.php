@@ -130,8 +130,10 @@ class TejasCaptchaController extends Controller
               $attrs = Array();
               $attrs['id'] = $_POST['id'];
               $attrs['alt'] = '';
-              $attrs['class'] = $_POST['class'];
+              $attrs['class'] = (array_key_exists('class', $_POST)) ? $_POST['class'] : '';
               $attrs['src'] = '';
+              $attrs['tejasCaptchaImageType'] = (array_key_exists('tejasCaptchaImageType', $_POST)) ? $_POST['tejasCaptchaImageType'] : '';
+
           }
           $_POST = Array();
           $result = $tejascaptcha->image_onAjaxRequest($attrs);
@@ -285,12 +287,12 @@ class TejasCaptchaController extends Controller
        * @param string $config
        * @return \Intervention\Image\ImageManager->response
        */
-      public function getCaptcha(TejasCaptcha $tejascaptcha, $config = 'default')
+      public function getCaptcha(TejasCaptcha $tejascaptcha, $config = 'null')
       {
           if (ob_get_contents()) {
               ob_clean();
           }
-          $result = $tejascaptcha->create();
+          $result = $tejascaptcha->create($config);
           $this->session->put('tejas_captcha_params.inprogress', false);
           return $result;
       }
@@ -302,9 +304,9 @@ class TejasCaptchaController extends Controller
        * @param string $config
        * @return \Intervention\Image\ImageManager->response
        */
-      public function getCaptchaApi(TejasCaptcha $tejascaptcha, $config = 'default')
+      public function getCaptchaApi(TejasCaptcha $tejascaptcha, $config = 'null')
       {
-        $result = $tejascaptcha->create();
+        $result = $tejascaptcha->create($config);
         $this->session->put('tejas_captcha_params.inprogress', false);
         return $result;
       }

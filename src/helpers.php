@@ -6,7 +6,7 @@ if (!function_exists('TejasCaptcha')) {
      * @param string $config
      * @return mixed
      */
-    function TejasCaptcha($config = 'default')
+    function TejasCaptcha($config = null)
     {
         return app('tejascaptcha')->create();
     }
