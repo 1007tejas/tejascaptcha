@@ -1,8 +1,8 @@
 {
 	"name": "tejas/tejascaptcha",
 	"type": "package",
-	"description": "Laravel 5 TejasCaptcha Package",
-	"keywords": ["laravel", "laravel5", "laravel 5", "captcha", "tejascaptcha", "Captcha", "TejasCaptcha", "security"],
+	"description": "Tejas Captcha for the Laravel framework",
+	"keywords": ["laravel", "captcha", "tejascaptcha", "Captcha", "TejasCaptcha", "security"],
 	"homepage": "https://github.com/1007tejas/tejascaptcha",
 	"license": "MIT",
 	"authors": [
