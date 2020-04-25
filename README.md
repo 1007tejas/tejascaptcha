@@ -203,7 +203,7 @@ files name prefix.
 Based on [MeWebStudio Captcha] (http://www.mewebstudio.com)
 
 ## Links
-* [Laravel 5 TejasCaptcha on Github](https://github.com/1007tejas/TejasCaptcha)
-* [Laravel 5 TejasCaptcha on Packagist](https://packagist.org/packages/TejasCaptcha)
+* [Laravel TejasCaptcha on Github](https://github.com/1007tejas/TejasCaptcha)
+* [Laravel TejasCaptcha on Packagist](https://packagist.org/packages/TejasCaptcha)
 * [Laravel website](http://laravel.com)
 * [License](http://www.opensource.org/licenses/mit-license.php)
