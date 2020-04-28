@@ -61,6 +61,8 @@ From your projects root directory, open a terminal and run ```composer update```
 
 #### Register the TejasCaptcha service provider
 
+##### This step is optional, `tejas/tejascaptcha` uses `Composers` `package discovery.`
+
 ##### config/app.php
 
 
