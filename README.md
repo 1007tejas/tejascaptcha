@@ -42,7 +42,7 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
 
 ```
      "require": {
-        "tejas/tejascaptcha": "^1.0.0",
+        "tejas/tejascaptcha": "^1.0",
     },
 ```
 
@@ -70,7 +70,7 @@ Register the `tejas/tejascaptcha` service provider under the `providers` key in 
 
 ```php
     'providers' => [
-        TejasCaptchaServiceProvider::class,
+        Tejas\TejasCaptcha\TejasCaptchaServiceProvider::class,
     ]
 ```
 
@@ -80,7 +80,7 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 
 ```php
     'aliases' => [
-        'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
+        'TejasCaptcha' => Tejas\TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
 
