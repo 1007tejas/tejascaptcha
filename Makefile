@@ -17,7 +17,5 @@ test: move
 
 install: move
 	cd ../../ && make -f tejascaptchaMakefile install
-
-finishinstall:
-	cd ./
+	$(shell exec sh)
 	@echo Installed tejas/tejascaptcha: OK
