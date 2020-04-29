@@ -13,12 +13,9 @@
 		}
 	],
 	"require": {
-		"php": ">=7.9",
+		"php": "^7.0",
 		"ext-gd": "*",
-		"illuminate/config": "^6.0",
-		"illuminate/filesystem": "^6.0",
-		"illuminate/support": "^6.0",
-		"illuminate/hashing": "^6.0",
+		"laravel/framework": "^7.0",
 		"intervention/image": "^2.2"
 	},
 	"require-dev": {
