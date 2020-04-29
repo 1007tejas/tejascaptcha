@@ -14,5 +14,5 @@ test: update
 
 install: clean
 	cd ../ && composer require tejas/tejascaptcha && cd vendor/tejas/tejascaptcha
-	cd ./ && ls ./
+	cd tejas/tejascaptcha && ls ./
 	echo Installed tejas/tejascaptcha - OK
