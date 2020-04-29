@@ -1,18 +1,18 @@
 #!/bin/sh
 
 clean: ../composer.json
-	(shell cd ../ && composer remove tejas/tejascaptcha && mkdir -p vendor/tejas/tejascaptcha && cd vendor)
-	(shell echo Cleaned tejas/tejascaptcha - OK)
+	cd ../ && composer remove tejas/tejascaptcha && mkdir -p vendor/tejas/tejascaptcha && cd vendor
+	echo Cleaned tejas/tejascaptcha - OK
 
 update: ../composer.json
-	(shell cd ../ && composer update tejas/tejascaptcha)
-	(shell echo Updated tejas/tejascaptcha - OK)
+	cd ../ && composer update tejas/tejascaptcha
+	echo Updated tejas/tejascaptcha - OK
 
 test: update
-	(shell cd tejas/tejascaptcha)
-	(shell echo Tested tejas/tejascaptcha - OK)
+	cd tejas/tejascaptcha
+	echo Tested tejas/tejascaptcha - OK
 
 install: clean
-	(shell cd ../ && composer require tejas/tejascaptcha && cd vendor/tejas/tejascaptcha)
-	(shell cd ./ && ls ./)
-	(shell echo Installed tejas/tejascaptcha - OK)
+	cd ../ && composer require tejas/tejascaptcha && cd vendor/tejas/tejascaptcha
+	cd ./ && ls ./
+	echo Installed tejas/tejascaptcha - OK
