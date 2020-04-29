@@ -4,16 +4,16 @@
 
 
 move:
-        MOVED := (shell cp -u ./tejascaptchaMakefile ../../tejascaptchaMakefile)
+        (shell cp -u ./tejascaptchaMakefile ../../tejascaptchaMakefile)
 
 clean: move
-        cd ../../ && make -f tejascaptchaMakefile clean
+        (shell cd ../../ && make -f tejascaptchaMakefile clean)
 
 update: move
-        cd ../../ && make -f tejascaptchaMakefile update
+        (shell cd ../../ && make -f tejascaptchaMakefile update)
 
 test: move
-        cd ../../ && make -f tejascaptchaMakefile test
+        (shell cd ../../ && make -f tejascaptchaMakefile test)
 
 install: move
-        cd ../../ && make -f tejascaptchaMakefile install
+        (shell cd ../../ && make -f tejascaptchaMakefile install)
