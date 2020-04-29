@@ -42,7 +42,7 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
 
 ```
      "require": {
-        "tejas/tejascaptcha": "^1.0.0",
+        "tejas/tejascaptcha": "^1.0",
     },
 ```
 
@@ -61,8 +61,9 @@ From your projects root directory, open a terminal and run ```composer update```
 
 #### Register the TejasCaptcha service provider
 
-##### config/app.php
+##### This step is optional, `tejas/tejascaptcha` uses `Composer` `package discovery`.
 
+##### config/app.php
 
 Register the `tejas/tejascaptcha` service provider under the `providers` key in `config/app.php`.
 
@@ -70,7 +71,7 @@ Register the `tejas/tejascaptcha` service provider under the `providers` key in 
 
 ```php
     'providers' => [
-        TejasCaptchaServiceProvider::class,
+        Tejas\TejasCaptcha\TejasCaptchaServiceProvider::class,
     ]
 ```
 
@@ -80,7 +81,7 @@ Register the `tejas/tejascaptcha` service providers alias under the `aliases` ke
 
 ```php
     'aliases' => [
-        'TejasCaptcha' => TejasCaptcha\Facades\TejasCaptcha::class,
+        'TejasCaptcha' => Tejas\TejasCaptcha\Facades\TejasCaptcha::class,
     ]
 ```
 
@@ -200,10 +201,10 @@ files name prefix.
 ## Example Usage Only
 
 
-Based on [MeWebStudio Captcha] (http://www.mewebstudio.com)
 
 ## Links
-* [Laravel 5 TejasCaptcha on Github](https://github.com/1007tejas/TejasCaptcha)
-* [Laravel 5 TejasCaptcha on Packagist](https://packagist.org/packages/TejasCaptcha)
+* [Forked from MeWebStudio Captcha](http://www.mewebstudio.com)
+* [Laravel TejasCaptcha on Github](https://github.com/1007tejas/TejasCaptcha)
+* [Laravel TejasCaptcha on Packagist](https://packagist.org/packages/TejasCaptcha)
 * [Laravel website](http://laravel.com)
 * [License](http://www.opensource.org/licenses/mit-license.php)

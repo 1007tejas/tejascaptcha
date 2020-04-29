@@ -28,12 +28,12 @@
     }
 
     function audioSourceFilename(filename = null) {
-        // On initial page load the audio source format is:
+        // On initial page load or on the refresh icon click vent the audio source format is:
         //  'captcha' + '.extension'
         // e.g. <source src="https://mchba.com/tejascaptcha/audio/captcha.mp3"
         //
-        // After clicking the refresh or speaker volume icon the audio source format is:
-        // 'captcha_' + (random number filename) + '.extension'
+        // On the speaker volume icon click event the audio source format is:
+        // 'captcha_' + (random number filename returned by ajax) + '.extension'
         // e.g. <source src="https://mchba.com/tejascaptcha/audio/captcha_8982442082968605313.mp3"
         //
         // *This function works with both formats
@@ -43,11 +43,11 @@
           var array_extension = array_url[array_url.length-1].split('.');
 
           if(filename) {
-            // clicked on speaker volume icon and ajax returned filename
+            // click event on speaker volume icon, ajax returns filename
             array_url[array_url.length-1] = 'captcha' + filename + '.' + array_extension[1];
           }else{
-            // Initial page load
-            array_url[array_url.length-1] = 'captcha_' + 1 + Math.floor(Math.random() * 10000) + '.' + array_extension[1];
+            // Initial page load and click event on refresh icon
+            array_url[array_url.length-1] = 'captcha.' + array_extension[1];
           }
 
           var str = recombineUrl(array_url, '/');
@@ -135,10 +135,6 @@
             },
         });
 
-        $('#tejas_captcha_audio').trigger('load').trigger('pause');
-
-        audioSourceFilename();
-
         $('#tejas_captcha_refresh_icon').addClass('sync-spin');
 
         $('#tejas_captcha_refresh_icon').bind('webkitAnimationEnd oanimationend msAnimationEnd animationend',
@@ -146,6 +142,11 @@
               $('#tejas_captcha_refresh_icon').removeClass('sync-spin');
               clearCaptchaResponseField();
         });
+
+        audioSourceFilename();
+        $('#tejas_captcha_audio').trigger('load').trigger('pause');
+
+
     });
 
     $('.tejas-captcha-icon-sync').trigger('click');

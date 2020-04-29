@@ -1,29 +1,29 @@
 {
 	"name": "tejas/tejascaptcha",
 	"type": "package",
-	"description": "Laravel 5 TejasCaptcha Package",
-	"keywords": ["laravel", "laravel5", "laravel 5", "captcha", "tejascaptcha", "Captcha", "TejasCaptcha", "security"],
+	"description": "Tejas Captcha for the Laravel framework",
+	"keywords": ["laravel", "captcha", "tejascaptcha", "Captcha", "TejasCaptcha", "security"],
 	"homepage": "https://github.com/1007tejas/tejascaptcha",
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "Jeff Hallmark",
-			"homepage": "https://github.com/1007tejas",
+			"homepage": "https://github.com/1007tejas/tejascaptcha",
 			"role": "Developer"
 		}
 	],
 	"require": {
-		"php": ">=7.0.8",
+		"php": "^7.0",
 		"ext-gd": "*",
-		"illuminate/config": ">=6.0",
-		"illuminate/filesystem": ">=6.0",
-		"illuminate/support": ">=6.0",
-		"illuminate/hashing": ">=6.0",
-		"intervention/image": ">=2.2"
+		"illuminate/config": "^6.0",
+		"illuminate/filesystem": "^6.0",
+		"illuminate/support": "^6.0",
+		"illuminate/hashing": "^6.0",
+		"intervention/image": "^2.2"
 	},
 	"require-dev": {
-		"phpunit/phpunit": ">=4.1",
-        	"mockery/mockery": ">=0.9"
+		"phpunit/phpunit": "^4.1",
+    "mockery/mockery": "^0.9"
 	},
 	"autoload": {
 		"psr-4": {

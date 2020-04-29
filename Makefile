@@ -1,22 +1,19 @@
-test: remove-deps
-	make test-laravel
-	# make test-lumen
+#!/bin/sh
 
-test-laravel:
-	composer require laravel/framework
-	vendor/bin/phpunit
-	make uninstall-laravel
+#TEJAS := ( shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 
-test-lumen:
-	# composer require laravel/lumen-framework
-	# vendor/bin/phpunit
-	# make uninstall-lumen
 
-remove-deps:
-	rm -rf vendor
+move:
+	MOVED := (shell cp -u ./tejascaptchaMakefile ../../tejascaptchaMakefile)
 
-uninstall-laravel: remove-deps
-	composer remove laravel/framework
+clean: move
+  make -f ../../tejascaptchaMakefile clean
 
-uninstall-lumen: remove-deps
-	composer remove laravel/lumen-framework
+update: move
+  make -f ../../tejascaptchaMakefile update
+
+test: move
+  make -f ../../tejascaptchaMakefile test
+
+install: move
+  make -f ../../tejascaptchaMakefile install
