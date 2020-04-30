@@ -21,4 +21,14 @@ test: move
 install: move
 	@cd ../../ && make -f tejascaptchaMakefile install
 	@echo Installed tejas/tejascaptcha: OK
-	@rm $(THISCWD)/../../tejascaptchaMakefile
+	@rm $(THISCWD)../../tejascaptchaMakefile
+	@echo To resync the directory contents type:
+	@echo "cd ./ && ls -las"
+	# @echo tejas/tejascaptcha is already installed, try "make update"
+	# @echo
+	# @echo If you really need a clean install of tejas/tejascaptcha
+	# @echo cd to the root of your project and run:
+	# @echo
+	# @echo composer remove tejas/tejascaptcha
+	# @echo composer clearcache
+	# @echo composer require tejas/tejascaptcha

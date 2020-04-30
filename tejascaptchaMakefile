@@ -3,7 +3,7 @@
 clean: ../composer.json
 	@cd ../ && composer clearcache
 
-update: ../composer.json
+update: ../composer.json clean
 	@cd ../ && composer update tejas/tejascaptcha
 
 test: update
