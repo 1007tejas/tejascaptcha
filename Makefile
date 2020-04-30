@@ -21,4 +21,4 @@ test: move
 install: move
 	@cd ../../ && make -f tejascaptchaMakefile install
 	@echo Installed tejas/tejascaptcha: OK
-	@rm $(THISCWD)../../tejascaptchaMakefile
+	@rm $(THISCWD)/../../tejascaptchaMakefile
