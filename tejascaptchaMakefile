@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clean: ../composer.json
-	@cd ../ && composer remove tejas/tejascaptcha && composer clearcache
+	@cd ../ && composer clearcache
 
 update: ../composer.json
 	@cd ../ && composer update tejas/tejascaptcha
