@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 clean: ../composer.json
-	cd ../ && composer remove tejas/tejascaptcha && composer clearcache && mkdir -p vendor/tejas/tejascaptcha && cd vendor
+	cd ../ && composer remove tejas/tejascaptcha && composer clearcache
 	echo Cleaned tejas/tejascaptcha - OK
 
 update: ../composer.json
@@ -13,4 +13,4 @@ test: update
 	echo Tested tejas/tejascaptcha - OK
 
 install: clean
-	cd ../ && composer require tejas/tejascaptcha && cd vendor/tejas/tejascaptcha
+	cd ../ && composer require tejas/tejascaptcha

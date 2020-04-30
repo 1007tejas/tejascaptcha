@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #TEJAS := ( shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 
@@ -17,5 +17,5 @@ test: move
 
 install: move
 	cd ../../ && make -f tejascaptchaMakefile install
-	$(shell exec sh)
 	@echo Installed tejas/tejascaptcha: OK
+	@printf "cd ./\n"
