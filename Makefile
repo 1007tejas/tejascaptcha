@@ -21,9 +21,8 @@ test: move
 install: move
 	@cd ../../ && make -f tejascaptchaMakefile install
 	@echo Installed tejas/tejascaptcha: OK
-	@rm $(THISCWD)/../../tejascaptchaMakefile
-	@echo To resync the directory contents type:
-	@echo \"cd ./ && ls -las\"
+	@rm $(THISCWD)/../../tejascaptchaMakefile > 1&2> /dev/null
+	@cd ./ > 1&2> /dev/null
 	@echo
 # @echo tejas/tejascaptcha is already installed, try "make update"
 # @echo
