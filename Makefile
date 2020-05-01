@@ -21,8 +21,9 @@ test: move
 install: move
 	@cd ../../ && make -f tejascaptchaMakefile install
 	@echo Installed tejas/tejascaptcha: OK
-	@rm $(THISCWD)/../../tejascaptchaMakefile > 1&2> /dev/null
-	@cd ./ > 1&2> /dev/null
+	@reset
+    @exec --login --user "$USER" /bin/sh -c "cd '$PWD'; exec '$SHELL' -l"
+	@rm $(THISCWD)/../../tejascaptchaMakefile
 	@echo
 # @echo tejas/tejascaptcha is already installed, try "make update"
 # @echo
