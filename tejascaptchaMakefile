@@ -1,4 +1,4 @@
-#!/bin/bash
+SHELL := /bin/bash
 
 clean: ../composer.json
 	@cd ../ && composer remove tejas/tejascaptcha && composer clearcache

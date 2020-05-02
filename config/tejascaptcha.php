@@ -37,7 +37,6 @@ return [
         'contrast' => -5,
     ],
     'audio' => [
-        'osAudioDirectory' => '/storage/app/audio',
         'audioFilePrefix' => 'final'
     ]
 ];

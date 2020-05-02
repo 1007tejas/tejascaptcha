@@ -2,32 +2,47 @@ SHELL := /bin/bash
 
 #TEJAS := $(shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 THISCWD := $(shell pwd)
+RESULT := 1
+
+define filesdirs =
+	@printf "\nAttempting to create the storage/app/audio directory\n"
+	if [ -d ../../../storage -a ! -d ../../../storage/app/audio ] then ;
+	@RESULT := mkdir -p ../../../storage/app/audio
+	fi
+	@echo ""
+	if [ 0 eq $RESULT ] then ;
+	@printf "Success!\n"
+	else
+	@printf "Could not create the storage/app/audio directory."
+endef
 
 define selyn =
-	@echo ""
-	@printf "\tInstalling tejas/tejascaptcha will completely delete the current version of the package.\n"
-	@printf "\tUpon successful completion of the install run 'cd .' to resync the new current directory contents\n"
-	@printf "\twith the terminals shell.\n\n"
+	@printf "\nInstalling tejas/tejascaptcha will completely delete the current version of the package.\n"
+	@printf "Upon successful completion of the install run 'cd .' to resync the new current directory contents\n"
+	@printf "with the terminals shell.\n\n"
 	@echo "Proceed with  installing tejas/tejascaptcha?"
 	@echo ""
 	@select YN in "Yes" "No"
 	@do
 	@case $YN in
-	"Yes") cd ../../ && make -f tejascaptchaMakefile install && echo "Installed tejas/tejascaptcha: OK" && cd .
+	Yes) cd ../../ && make -f tejascaptchaMakefile install && echo "Installed tejas/tejascaptcha: OK" && cd .
 	break
 	;;
-	"No") echo "You can try 'make update' instead"
+	No) YN="rubbish"
 	break
 	;;
-	*) echo "invalid entry - "$YN"."
-	break
+	*) printf "Invalid entry. Enter '1' for Yes or '2' for No\n1) Yes\n2) No\n"
 	;;
 	@esac
 	@done
 	@echo ""
-	@printf "\tInstalling tejas/tejascaptcha has deleted and recreated the current directory.\n"
-	@printf "\tUpon successful completion of the install run 'cd .' to resync the new current directory contents\n"
-	@printf "\twith the terminals shell.\n\n"
+	if [ Xrubbish = X$YN ] ; then
+	@printf "You can 'make update' instead, it's non-destructive.\n\n"
+	else
+	@printf "Installing tejas/tejascaptcha has deleted and recreated the current directory.\n"
+	@printf "Upon successful completion of the install run 'cd .' to resync the new current directory contents\n"
+	@printf "with the terminals shell.\n\n"
+	fi
 endef
 
 move:
@@ -48,7 +63,7 @@ test: move
 	@echo "Tested tejas/tejascaptcha - OK"
 	@echo ""
 
-install: move ; $(value selyn)
+install: move ; $(value selyn) ; $(value filesdirs)
 	@echo ""
 
 .ONESHELL:
