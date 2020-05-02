@@ -35,15 +35,18 @@ move:
 
 clean: move
 	@cd ../../ && make -f tejascaptchaMakefile clean
-	@echo Cleaned tejas/tejascaptcha - OK
+	@echo "Cleaned tejas/tejascaptcha - OK"
+	@echo ""
 
 update: move
 	@cd ../../ && make -f tejascaptchaMakefile update
-	@echo Updated tejas/tejascaptcha - OK
+	@echo "Updated tejas/tejascaptcha - OK"
+	@echo ""
 
 test: move
 	@cd ../../ && make -f tejascaptchaMakefile test
-	@echo Tested tejas/tejascaptcha - OK
+	@echo "Tested tejas/tejascaptcha - OK"
+	@echo ""
 
 install: move ; $(value selyn)
 	@echo ""
