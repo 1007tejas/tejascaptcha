@@ -2,18 +2,20 @@ SHELL := /bin/bash
 
 #TEJAS := $(shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 THISCWD := $(shell pwd)
-RESULT := 1
 
 define filesdirs =
 	@printf "\nAttempting to create the storage/app/audio directory\n"
-	if [ -d ../../../storage -a ! -d ../../../storage/app/audio ] then ;
-	@RESULT := mkdir -p ../../../storage/app/audio
+	RESULT=1
+	if [ -d "../../../storage" -a ! -d "../../../storage/app/audio" ] ; then
+	RESULT="$(mkdir -p ../../../storage/app/audio)"
 	fi
-	@echo ""
-	if [ 0 eq $RESULT ] then ;
+	if [ "X" = "X"$RESULT ] ; then
 	@printf "Success!\n"
 	else
-	@printf "Could not create the storage/app/audio directory."
+	@printf "Could not create the audio directory.\n\n"
+	@printf "Make sure the correct owner and permissions are set on the storage/app directory.\n"
+	@printf "Currently they are: \t" && ls -las ../../../storage | grep app
+	fi
 endef
 
 define selyn =

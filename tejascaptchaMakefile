@@ -7,6 +7,9 @@ update: ../composer.json
 	@cd ../ && composer clearcache && composer update tejas/tejascaptcha
 
 test: update
-
+	@printf "The following directories must be writable by the web servers user account.\n"
+	@printf "e.g. 'www-data' for the Apache2 web server\n\n"
+	@cd ../ && ls -las storage/audio
+	
 install: clean
 	@cd ../ && composer require tejas/tejascaptcha
