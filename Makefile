@@ -69,6 +69,6 @@ install: move ; $(value selyn) ; $(value filesdirs)
 	@echo ""
 
 version:
-	$echo "tejas/tejascaptcha version: 1.0.12.9"
+	@echo "tejas/tejascaptcha version: 1.0.12.9"
 
 .ONESHELL:
