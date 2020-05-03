@@ -1,15 +1,80 @@
 SHELL := /bin/bash
 
+define testdir =
+	@echo ""
+	TPATH=../../../storage/app/audio
+	if [ -d $TPATH ] ; then
+	@printf "Make sure the correct owner and permissions are set on the storage/app/audio directory.\n"
+	@printf "Currently they are: \t" && ls -las ../../../storage/app | grep audio
+	@printf "\nThe owner should be set to the web servers user, e.g. www-data for Apache2\n"
+	else
+	@printf "The "$TPATH" directory does not exist.\n"
+	@printf "Make sure the correct owner and permissions are set on the storage/app directory.\n"
+	@printf "Currently they are: \t" && ls -las ../../../storage | grep app
+	@printf "After the owner and permissions are verified run 'make install'."
+	fi
+endef
+
+define filesdirs =
+	@printf "\nAttempting to create the storage/app/audio directory\n"
+	RESULT=1
+	if [ -d "../../../storage" -a ! -d "../../../storage/app/audio" ] ; then
+	RESULT="$(mkdir -p ../../../storage/app/audio)"
+	fi
+	if [ "X" = "X"$RESULT ] ; then
+	@printf "Success!\n"
+	else
+	@printf "Could not create the audio directory.\n\n"
+	@printf "Make sure the correct owner and permissions are set on the storage/app directory.\n"
+	@printf "Currently they are: \t" && ls -las ../../../storage | grep app
+	@printf "\nThe owner should be set to the web servers user, e.g. www-data for Apache2\n"
+	fi
+endef
+
+define requireproj =
+	if [ "X"1 -eq "X"$1 ] ; then
+	NAME="install"
+	NAMING="installing"
+	elif [ "X"2 -eq "X"$1 ] ; then
+	NAME="update"
+	NAMEING="updating"
+	else
+	NAME="-passed bad arg-"
+	NAMING="-passed bad arg-"
+	fi
+	@printf "\n$NAMING tejas/tejascaptcha will completely delete the current version of the package.\n"
+	@printf "Upon successful completion of the $NAME run 'cd .' to resync the new current directory contents\n"
+	@printf "with the terminals shell.\n\n"
+	@echo "Proceed with  $NAMING tejas/tejascaptcha?"
+	@echo ""
+	@select YN in "Yes" "No"
+	@do
+	@case $YN in
+	Yes)  cd ../ && composer require tejas/tejascaptcha && cd .
+	break
+	;;
+	No) YN="rubbish"
+	break
+	;;
+	*) printf "Invalid entry. Enter '1' for Yes or '2' for No\n1) Yes\n2) No\n"
+	;;
+	@esac
+	@done
+	@echo ""
+	if [ Xrubbish != X$YN ] ; then
+	@printf "$NAMING tejas/tejascaptcha has deleted and recreated the current project directory.\n"
+	@printf "Upon successful completion of the $NAME run 'cd .' to resync the new current directory contents\n"
+	@printf "with the terminals shell.\n\n"
+	fi
+endef
+
 clean: ../composer.json
 	@cd ../ && composer remove tejas/tejascaptcha && composer clearcache
 
-update: ../composer.json
-	@cd ../ && composer clearcache && composer update tejas/tejascaptcha
+install: clean ; $(value requireproj 1) ; $(value filesdirs)
 
-test: update
-	@printf "The following directories must be writable by the web servers user account.\n"
-	@printf "e.g. 'www-data' for the Apache2 web server\n\n"
-	@cd ../ && ls -las storage/audio
-	
-install: clean
-	@cd ../ && composer require tejas/tejascaptcha
+update: ../composer.json ; $(value requireproj 2) ; $(value filesdirs)
+
+test: ; $(value testdir)
+
+.ONESHELL:
