@@ -20,6 +20,9 @@ The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.co
 ![The preview image is not available](assets/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha Preview")
 
 
+## Version
+* 1.0.12.9
+
 
 ## Compatibility
 
