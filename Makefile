@@ -1,33 +1,30 @@
 #TEJAS := $(shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 SHELL := /bin/bash
-THISCWD := $(shell pwd)
 VERSION = $(<versiontxt)
 
 move:
-	@cp -u ./tejascaptchaMakefile ../../tejascaptchaMakefile
+	@cp -r -u ./scripts ../../tejascaptcha_scripts
 
 clean: move
-	@cd ../../ && make -f tejascaptchaMakefile clean
+	@cd ../../tejascaptcha_scripts && make -f Makefile clean
 	@echo "Cleaned tejas/tejascaptcha - OK"
 	@echo ""
 
 update: move
-	@cd ../../ && make -f tejascaptchaMakefile update
+	@cd ../../tejascaptcha_scripts && make -f Makefile update
 	@echo "Updated tejas/tejascaptcha - OK"
 	@echo ""
 
 test: move
-	@cd ../../ && make -f tejascaptchaMakefile test
+	@cd ../../tejascaptcha_scripts && make -f Makefile test
 	@echo "Tested tejas/tejascaptcha - OK"
 	@echo ""
 
 install: move
-	cd ../../ && make -f tejascaptchaMakefile install
+	cd ../../tejascaptcha_scripts && make -f Makefile install
 	@echo "Installed tejas/tejascaptcha: OK"
 	@echo ""
 
 version:
 	@echo "tejas/tejascaptcha version: "$VERSION
 	@echo ""
-
-.ONESHELL:
