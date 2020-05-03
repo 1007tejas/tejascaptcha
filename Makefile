@@ -5,9 +5,9 @@ VERSION = $(<versiontxt)
 move:
 	@cp -r -u ./scripts ../../tejascaptcha_scripts
 
-clean: move
-	@cd ../../tejascaptcha_scripts && make -f Makefile clean
-	@echo "Cleaned tejas/tejascaptcha - OK"
+remove: move
+	@cd ../../tejascaptcha_scripts && make -f Makefile remove
+	@echo "Removed tejas/tejascaptcha - OK"
 	@echo ""
 
 update: move
