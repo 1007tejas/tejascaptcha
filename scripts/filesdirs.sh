@@ -1,7 +1,11 @@
 printf "\nAttempting to create the storage/app/audio directory\n"
 RESULT=1
-if [ -d "../../storage" -a ! -d "../../storage/app/audio" ] ; then
+if [ -d "../../storage" ] ; then
+if [ ! -d "../../storage/app/audio" ] ; then
 RESULT="$(mkdir -p ../../../storage/app/audio)"
+fi
+else
+RESULT=0
 fi
 if [ "X" = "X"$RESULT ] ; then
 printf "Success!\n"
