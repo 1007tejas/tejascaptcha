@@ -1,6 +1,6 @@
 #TEJAS := $(shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 SHELL := /bin/bash
-VERSION = $(<versiontxt)
+VERSION = $$(<versiontxt)
 
 move:
 	@cp -r -u ./scripts ../../tejascaptcha_scripts
@@ -26,5 +26,5 @@ install: move
 	@echo ""
 
 version:
-	@echo "tejas/tejascaptcha version: "$VERSION
+	@echo "tejas/tejascaptcha version: "$(VERSION)
 	@echo ""
