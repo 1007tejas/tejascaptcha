@@ -28,3 +28,6 @@ install: move
 version:
 	@echo "tejas/tejascaptcha version: "$(VERSION)
 	@echo ""
+
+wakeup:
+	@cd .
