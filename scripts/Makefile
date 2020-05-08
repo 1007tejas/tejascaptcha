@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 remove: ../../composer.json
-	$(MAKE) -C ../../ && composer remove tejas/tejascaptcha && composer clearcache
+	-cd ../../ && composer remove tejas/tejascaptcha && composer clearcache
 
 install:
 	@$$SHELL ./requireproj.sh 1
