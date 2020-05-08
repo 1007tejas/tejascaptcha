@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAKELOC := "../tejas/tejascaptcha/"
+MAKELOC="../tejas/tejascaptcha/"
 
 if [ -f $(MAKELOC)"Makefile" ] ; then
 cp $(MAKELOC)Makefile ../../../tejas_Makefile;
