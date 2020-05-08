@@ -1,9 +1,11 @@
 #TEJAS := $(shell cd ../../../ && composer show | grep -q "tejas/tejascaptcha" && echo 1 || echo 1 )
 SHELL := /bin/bash
 VERSION = $$(<versiontxt)
+BASE_DIR = $$(shell pwd)
 
 move:
-	@cp -r -u ./scripts ../../tejascaptcha_scripts
+	if [ -d "../../tejascaptcha_scripts"] ; then rm -r ../../tejascaptcha_scripts; fi
+	@cp -r ./scripts ../../tejascaptcha_scripts
 
 remove: move
 	$(MAKE) -C ../../tejascaptcha_scripts && make -f Makefile remove
@@ -30,4 +32,4 @@ version:
 	@echo ""
 
 wakeup:
-	$(MAKE) -C .
+	CURDIR = $(BASE_DIR)
