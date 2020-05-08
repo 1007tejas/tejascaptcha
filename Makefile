@@ -4,7 +4,7 @@ VERSION = $$(<versiontxt)
 BASE_DIR = $$(shell pwd)
 
 move:
-	if [ -d "../../tejascaptcha_scripts"] ; then rm -r ../../tejascaptcha_scripts; fi
+	if [ -d "../../tejascaptcha_scripts" ] ; then rm -r ../../tejascaptcha_scripts; fi
 	@cp -r ./scripts ../../tejascaptcha_scripts
 
 remove: move
