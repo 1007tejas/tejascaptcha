@@ -4,32 +4,29 @@ VERSION = $$(<versiontxt)
 BASE_DIR = $$(shell pwd)
 
 move:
-	if [ -d "../../tejascaptcha_scripts" ] ; then rm -r ../../tejascaptcha_scripts; fi
-	@cp -r ./scripts ../../tejascaptcha_scripts
+	if [ -d "vendor/tejascaptcha_scripts" ] ; then rm -r vendor/tejascaptcha_scripts; fi
+	if [ -d "vendor/tejas/tejascaptcha/scripts" ] ; then cp -r vendor/tejas/tejascaptcha/scripts vendor/tejascaptcha_scripts; fi
 
 remove: move
-	$(MAKE) -C ../../tejascaptcha_scripts && make -f Makefile remove
+	$(MAKE) -C vendor/tejascaptcha_scripts && make -f Makefile remove
 	@echo "Removed tejas/tejascaptcha - OK"
 	@echo ""
 
 update: move
-	$(MAKE) -C ../../tejascaptcha_scripts && make -f Makefile update
+	$(MAKE) -C vendor/tejascaptcha_scripts && make -f Makefile update
 	@echo "Updated tejas/tejascaptcha - OK"
 	@echo ""
 
 test: move
-	$(MAKE) -C ../../tejascaptcha_scripts && make -f Makefile test
+	$(MAKE) -C vendor/tejascaptcha_scripts && make -f Makefile test
 	@echo "Tested tejas/tejascaptcha - OK"
 	@echo ""
 
 install: move
-	$(MAKE) -C ../../tejascaptcha_scripts && make -f Makefile install
+	$(MAKE) -C vendor/tejascaptcha_scripts && make -f Makefile install
 	@echo "Installed tejas/tejascaptcha: OK"
 	@echo ""
 
 version:
 	@echo "tejas/tejascaptcha version: "$(VERSION)
 	@echo ""
-
-wakeup:
-	CURDIR = $(BASE_DIR)
