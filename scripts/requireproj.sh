@@ -18,7 +18,7 @@ echo ""
 select YN in "Yes" "No"
 do
 case $YN in
-Yes)  cd ../../ && composer remove tejas/tejascaptcha && composer clearcache && composer require tejas/tejascaptcha && cd .
+Yes)  cd ../../ && composer remove tejas/tejascaptcha && composer clearcache && composer require tejas/tejascaptcha
 break
 ;;
 No) YN="rubbish"
