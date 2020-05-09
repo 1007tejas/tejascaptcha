@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo ""
 TPATH=../../storage/app/audio
 if [ -d $TPATH ] ; then

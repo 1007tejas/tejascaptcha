@@ -1,3 +1,5 @@
+#!/bin/bash
+
 printf "\nAttempting to create the storage/app/audio directory\n"
 RESULT=1
 if [ -d "../../storage" ] ; then
