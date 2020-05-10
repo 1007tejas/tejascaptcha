@@ -40,10 +40,10 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
-		     "@bash post-install.sh"
+		     "bash scripts/postinstall.sh"
 		],
 		"post-update-cmd": [
-		     "@bash post-install.sh"
+		     "bash scripts/postinstall.sh"
 		 ]
 	},
 	"minimum-stability": "dev",

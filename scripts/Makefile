@@ -6,12 +6,10 @@ remove: ../../composer.json
 install: ../../composer.json
 	@$$SHELL requireproj.sh 1
 	@$$SHELL filesdirs.sh
-	@$$SHELL postinstall.sh
 
 update: ../../composer.json
 	@$$SHELL requireproj.sh 2
 	@$$SHELL filesdirs.sh
-	@$$SHELL postinstall.sh
 
 test:
 	@$$SHELL testdir.sh
