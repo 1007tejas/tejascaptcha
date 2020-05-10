@@ -39,12 +39,9 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": [
+		"tejas-post-install": [
 		     "bash scripts/postinstall.sh"
-		],
-		"post-update-cmd": [
-		     "bash scripts/postinstall.sh"
-		 ]
+		]
 	},
 	"minimum-stability": "dev",
 	"extra": {
