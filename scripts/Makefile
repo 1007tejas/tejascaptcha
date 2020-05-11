@@ -1,23 +1,14 @@
 SHELL := /bin/bash
 VERSION := $$(<version)
 
-remove: ../../composer.json
-	@$$SHELL removeproj.sh
-	if [ "X"$$? = "X0" ] ; then
-		@$$SHELL filesdirs.sh 2
-	fi
+remove:
+	@$$SHELL removeproj.sh && filesdirs.sh 2
 
-install: ../../composer.json
-	@$$SHELL requireproj.sh 1
-	if [ "X"$$? = "X0" ] ; then
-		@$$SHELL filesdirs.sh 1
-	fi
+install:
+	@$$SHELL requireproj.sh 1 && filesdirs.sh 1
 
-update: ../../composer.json
-	@$$SHELL requireproj.sh 2
-	if [ "X"$$? = "X0" ] ; then
-		@$$SHELL filesdirs.sh 1
-	fi
+update:
+	@$$SHELL requireproj.sh 2 && filesdirs.sh 1
 
 test:
 	@$$SHELL testdir.sh
