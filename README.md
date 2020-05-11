@@ -21,7 +21,7 @@ The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.co
 
 
 ## Version
-* 1.0.12.9
+* 1.0.12.30
 
 
 ## Compatibility
