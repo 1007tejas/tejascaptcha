@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ORIGMAKEFILELOC="../"
-NEWMAKEFILELOC="../../../../tejascaptcha"
+NEWMAKEFILELOC="../../../tejascaptcha"
 
 if [ -f $ORIGMAKEFILELOC"Makefile" ] ; then
 [ -d NEWMAKEFILELOC ] || mkdir $NEWMAKEFILELOC

@@ -61,6 +61,19 @@ From your projects root directory, open a terminal and run ```composer update```
 
 ![The composer update image is not available](assets/githubReadme/images/tejasCaptchaComposerUpdate.png?raw=true "TejasCaptcha Composer Update")
 
+#####  Makefile - Post Install
+
+
+To install the included Make file run this from your projects root directory.
+
+* cd vendor/tejas/tejascaptcha/scripts && bash postinstall.sh && cd ../../../
+
+To run the tejas/tejascaptcha Makefile after installing it; From your projects
+root directory run the following with one of the specified make actions:
+
+* cd tejascaptcha && make [ install update remove version ] && cd ../
+
+
 
 #### Register the TejasCaptcha service provider
 
