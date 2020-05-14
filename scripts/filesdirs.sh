@@ -26,7 +26,7 @@ if [ "Xcreate" = "X"$NAME ] ; then
 		printf "\nCurrent permissions and owner are: \t" && ls -las ../../storage/app | grep audio
 		printf "The owner should be set to the web servers user, e.g. www-data for Apache2\n\n"
 	else
-		printf "Could not create the audio directory.\n\n"
+		printf "Could not create the audio directory\n\n"
 		printf "Make sure the correct owner and permissions are set on the storage/app directory.\n"
 		printf "\nCurrent permissions and owner are: \t" && ls -las ../../storage | grep app
 		printf "The owner should be set to the user that created the Laravel app\n\n"
@@ -40,7 +40,7 @@ else
 		RESULT=
 	fi
 	if [ "X" = "X"$RESULT ] ; then
-		printf "Success! "$NAME"d the storage/app/audio directory.\n\n"
+		printf "Success! "$NAME"d the storage/app/audio directory\n\n"
 	else
 		printf "Error! could not "$NAME" the storage/app/audio directory.\n\n"
 	fi

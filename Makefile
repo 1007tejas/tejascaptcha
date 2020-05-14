@@ -21,6 +21,6 @@ install: move
 	@cd ../vendor/tejascaptcha_scripts && make install
 	@echo ""
 
-version: move
-	@cd ../vendor/tejascaptcha_scripts && make version
+show_version: move
+	@cd ../vendor/tejascaptcha_scripts && make show_version
 	@echo ""

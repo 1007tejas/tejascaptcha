@@ -14,4 +14,4 @@ test:
 	@$$SHELL testdir.sh
 
 show_version:
-	printf "The tejas/tejascaptcha version is: "$(VERSION)
+	printf "The tejas/tejascaptcha version is: "$(VERSION)"\n"
