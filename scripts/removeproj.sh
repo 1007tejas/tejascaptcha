@@ -5,7 +5,8 @@ echo ""
 select YN in "Yes" "No"
 do
 case $YN in
-Yes)  cd ../../ && composer remove tejas/tejascaptcha && composer clearcache && \rm tejascaptcha
+Yes)  cd ../../ && composer remove tejas/tejascaptcha && composer clearcache && \rm -r -f tejascaptcha
+
 break
 ;;
 No) exit 0

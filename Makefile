@@ -6,7 +6,7 @@ move:
 	@if [ -d "../vendor/tejas/tejascaptcha/scripts" ] ; then cp -r ../vendor/tejas/tejascaptcha/scripts ../vendor/tejascaptcha_scripts; fi
 
 remove: move
-	@cd ../vendor/tejascaptcha_scripts && make remove
+	@cd ../vendor/tejascaptcha_scripts && make remove && [ -d "../vendor/tejascaptcha_scripts" ] && \rm -r -f ../vendor/tejascaptcha_scripts
 	@echo ""
 
 update: move
