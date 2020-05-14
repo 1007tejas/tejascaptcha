@@ -8,10 +8,10 @@ install:
 	@$$SHELL requireproj.sh 1 && @$$SHELL filesdirs.sh 1
 
 update:
-	@$$SHELL requireproj.sh 2 && @$$shell filesdirs.sh 1
+	@$$SHELL requireproj.sh 2 && @$$SHELL filesdirs.sh 1
 
 test:
 	@$$SHELL testdir.sh
 
 show_version:
-	printf "The tejas/tejascaptcha version is: "$(VERSION)"\n"
+	@printf "The tejas/tejascaptcha version is: "$(VERSION)"\n"
