@@ -6,14 +6,15 @@ move:
 	@if [ -d "../vendor/tejas/tejascaptcha/scripts" ] ; then cp -r ../vendor/tejas/tejascaptcha/scripts ../vendor/tejascaptcha_scripts; fi
 
 remove: move
-	@cd ../vendor/tejascaptcha_scripts && make remove && [ -d "../vendor/tejascaptcha_scripts" ] && \rm -r -f ../vendor/tejascaptcha_scripts
 	@echo ""
-
+	-@cd ../ && composer remove tejas/tejascaptcha && composer clearcache && [ -d "vendor/tejascaptcha_scripts" ] && rm -r -f vendor/tejascaptcha_scripts  && [ -d "tejascaptcha" ] && rm -r -f tejascaptcha
+	@exit 0
+	
 update: move
 	@cd ../vendor/tejascaptcha_scripts && make update
 	@echo ""
 
-test:
+test: move
 	@cd ../vendor/tejascaptcha_scripts && make test
 	@echo ""
 
