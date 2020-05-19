@@ -7,7 +7,7 @@ move:
 
 remove: move
 	@echo ""
-	-@cd ../ && composer remove tejas/tejascaptcha && composer clearcache && [ -d "vendor/tejascaptcha_scripts" ] && rm -r -f vendor/tejascaptcha_scripts  && [ -d "tejascaptcha" ] && rm -r -f tejascaptcha && cd ../ && exit 0
+	-@cd ../ && composer remove tejas/tejascaptcha && composer clearcache && [ -d "vendor/tejascaptcha_scripts" ] && rm -r -f vendor/tejascaptcha_scripts  && [ -d "tejascaptcha" ] && rm -r -f tejascaptcha && exit 0
 
 update: move
 	@cd ../vendor/tejascaptcha_scripts && make update
@@ -24,3 +24,5 @@ install: move
 show_version: move
 	@cd ../vendor/tejascaptcha_scripts && make show_version
 	@echo ""
+
+.ONESHELL
