@@ -9,7 +9,6 @@ The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.co
      * [Composer](#composer)
      * [Register the TejasCaptcha service provider](#register-the-tejascaptcha-service-provider)
      * [Middleware](#middleware)
-     * [Audio Directory](#audio-directory)
 
 * [Configuration](#configuration)
      * [Publish the configuration file](#publish-the-configuration-file)
@@ -18,10 +17,6 @@ The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.co
 ## Preview
 
 ![The preview image is not available](assets/githubReadme/images/tejasCaptchaPreview.png?raw=true "TejasCaptcha Preview")
-
-
-## Version
-* 1.0.12.30
 
 
 ## Compatibility
@@ -34,20 +29,12 @@ The tejas/tejascaptcha service provider has been tested with Laravel versions 5,
 
 #### Composer
 
-The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your laravel projects `composer.json` file require the latest version of the `tejas/tejascaptcha` package and set the `minimum-stability` to `dev`.
+The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org). In your projects `composer.json` file set the `minimum-stability` to `dev`.
 
 
 
 ##### composer.json
 
-
-![The composer require image is not available](assets/githubReadme/images/tejasCaptchaComposerRequire.png?raw=true "TejasCaptcha Composer Require Section")
-
-```
-     "require": {
-        "tejas/tejascaptcha": "^1.0",
-    },
-```
 
 ![The composer minimum-stability image is not available](assets/githubReadme/images/tejasCaptchaComposerMinStability.png?raw=true "TejasCaptcha Composer Minimum-Stability")
 
@@ -56,22 +43,25 @@ The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer
     "prefer-stable": true,
 ```
 
-From your projects root directory, open a terminal and run ```composer update```.
+From your projects root directory, open a terminal and run the command `composer require tejas/tejascaptcha`.
 
 
-![The composer update image is not available](assets/githubReadme/images/tejasCaptchaComposerUpdate.png?raw=true "TejasCaptcha Composer Update")
+![The composer require cmd image is not available](assets/githubReadme/images/tejasCaptchaComposerRequireCmd.png?raw=true "TejasCaptcha Composer Require Cmd")
 
-#####  Makefile - Post Install
+####  Makefile - Post Install
 
+##### This step is optional.
 
-To install the included Make file run this from your projects root directory.
+To install the included Makefile run this from your projects root directory.
 
-* cd vendor/tejas/tejascaptcha/scripts && bash postinstall.sh && cd ../../../
+* cd vendor/tejas/tejascaptcha/scripts && bash postinstall.sh && cd ../../../../
 
-To run the tejas/tejascaptcha Makefile after installing it; From your projects
-root directory run the following with one of the specified make actions:
+The Makefile is installed inside the tejascaptcha directory in your projects root.
 
-* cd tejascaptcha && make [ install update remove version ] && cd ../
+To run the tejascaptcha/Makefile after installing it; From your projects
+root directory run the following command with one of the specified make actions:
+
+* make -C tejascaptcha [ install update test remove show_version ]
 
 
 
@@ -139,20 +129,6 @@ class VerifyTejasCaptcha extends Middleware
 The second middleware file verifies that the current captcha matches the users response. This file is also named `VerifyTejasCaptcha.php`, but it is located in the `tejas/tejascaptcha/src/Http/Middleware` folder. Nothing should be done with this second middleware file.
 
 
-#### Audio directory
-
-##### storage/app/audio
-
-The default directory for writing audio files, starting from the root of your project, is `storage/app/audio`. This directory is specified in the  :small_red_triangle:`tejascaptcha configuration` file and may be changed according to your preference. The `audio` directory must exist and have read / write permissions set for your web servers user. e.g. www-data for Apache2.
-
-
-![The tejascaptcha audio directory permissions image is not available](assets/githubReadme/images/tejasCaptchaAudioDirectoryPermissions.png?raw=true "TejasCaptcha Audio Directory Permissions")
-
-
- :small_red_triangle:see Configuration section below.
-
-
-
 ## Configuration
 
 
@@ -193,7 +169,6 @@ return [
     'flat' => [], 'mini' => [], 'inverse' => [],
 
     'audio' => [
-        'osAudioDirectory' => '/storage/app/audio',
         'audioFilePrefix' => 'final'
     ]
 ];
@@ -210,8 +185,7 @@ of `tejascaptchaImageType`.
 :small_red_triangle:refer to the `tejas/tejascaptcha/example/js/tejascaptcha.js`
 file in the `$('#tejas_captcha_refresh_icon')` click function.
 
-The `audio` key specifies the where the audio files are stored and the audio
-files name prefix.
+The `audio` key specifies the audio files name prefix.
 
 
 ## Example Usage Only
