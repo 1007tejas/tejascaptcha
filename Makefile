@@ -24,5 +24,3 @@ install: move
 show_version: move
 	@cd ../vendor/tejascaptcha_scripts && make show_version
 	@echo ""
-
-.ONESHELL

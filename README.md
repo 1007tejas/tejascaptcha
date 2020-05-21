@@ -61,7 +61,7 @@ The Makefile is installed inside the tejascaptcha directory in your projects roo
 To run the tejascaptcha/Makefile after installing it; From your projects
 root directory run the following command with one of the specified make actions:
 
-* make -C tejascaptcha [ install update test remove show_version ]
+* make -C tejascaptcha [ install, update, test, remove or show_version ]
 
 
 
@@ -188,8 +188,10 @@ file in the `$('#tejas_captcha_refresh_icon')` click function.
 The `audio` key specifies the audio files name prefix.
 
 
-## Example Usage Only
+## Example Usage
 
+Located in the tejas/tejasCaptcha/example directory are sample
+css, html and javascript files that may be used in your project.
 
 
 ## Links
