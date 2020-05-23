@@ -110,9 +110,8 @@ class TejasCaptchaController extends Controller
               }
           }
 
-          if(strpos($this->osAudioDirectory, '/') !== 0) {
-            $this->osAudioDirectory = '/' . $this->osAudioDirectory;
-          }
+          // removed osAudioDirectory option from the config repository
+          $this->osAudioDirectory = '/storage/app/audio';
 
           $this->osBasePath = base_path();
           $this->osAudioStoragePath = $this->osBasePath . $this->osAudioDirectory;
