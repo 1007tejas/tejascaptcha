@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Part of Laravel 5 TejasCaptcha package
+* Part of the Laravel Tejas/TejasCaptTcha package
  *
  * @copyright
  * @version
@@ -23,8 +23,6 @@ use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Facades\Log;
-// Log levels: emergency, alert, critical, error, warning, notice, info and debug.
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Debug\DebugClassLoader;
@@ -201,26 +199,6 @@ class TejasCaptcha
      * @var bool
      */
     protected $math_generated = 0;
-    //
-    // /**
-    //  * @var bool
-    //  */
-    // protected $storeAudioInSession = false;
-    //
-    // /**
-    //  * @var string
-    //  */
-    // protected $osAudioStoragePath = null;
-    //
-    // /**
-    //  * @var string
-    //  */
-    // protected $audioFilePrefix = null;
-    //
-    // /**
-    //  * @var string
-    //  */
-    // protected $audioFileSuffix = null;
 
     /**
      * Constructor
@@ -339,8 +317,6 @@ class TejasCaptcha
             $this->math_generated = 1;
         }
         $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
-
-        // Log::debug('create: $math: '.$this->math.' $math_generated: '.$this->math_generated);
 
         $generator = $this->generate();
         $this->text = $generator['value'];
@@ -631,8 +607,6 @@ class TejasCaptcha
 
               $this->session->put('tejas_captcha_vars.math', $this->math);
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
-
-              // Log::debug('image-onAjaxRequest: $math: '.$this->math.' $math_generated: '.$this->math_generated);
           }
       }
       return json_encode($attrs);
@@ -662,8 +636,6 @@ class TejasCaptcha
 
               $this->session->put('tejas_captcha_vars.math', $this->math);
               $this->session->put('tejas_captcha_vars.math_generated', $this->math_generated);
-
-              // Log::debug('image-onPageLoad: $math: '.$this->math.' $math_generated: '.$this->math_generated);
           }
           $attrs_str .= $attr . "='" . $value . "'";
       }

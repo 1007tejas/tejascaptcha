@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Part of Laravel 5 TejasCaptcha package
+ * Part of the Laravel Tejas/TejasCaptTcha package
  *
  * @copyright
  * @version
@@ -16,7 +16,6 @@ namespace Tejas\TejasCaptcha;
 
 use Illuminate\Routing\Controller;
 use Symfony\Component\Process\Process;
-// Log levels: emergency, alert, critical, error, warning, notice, info and debug.
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Session\Store as Session;
 use Illuminate\Http\Request;
@@ -110,8 +109,9 @@ class TejasCaptchaController extends Controller
               }
           }
 
-          // removed osAudioDirectory option from the config repository
-          $this->osAudioDirectory = '/storage/app/audio';
+          if(strpos($this->osAudioDirectory, '/') !== 0) {
+            $this->osAudioDirectory = '/' . $this->osAudioDirectory;
+          }
 
           $this->osBasePath = base_path();
           $this->osAudioStoragePath = $this->osBasePath . $this->osAudioDirectory;
@@ -164,26 +164,24 @@ class TejasCaptchaController extends Controller
                 $this->audioArray[] = '*' . $this->audioFileSuffix . '*';
                 $this->session->put("tejas_captcha_audio_files.audioFileSuffixes", $this->audioArray);
 
-                // cleanup old file storage for this session
-                if( !$this->session->has("tejas_captcha_audio_files.oldAudioFileSuffix")) {
-                    $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
-                }else{
-                    $this->oldAudioFileSuffix = $this->session->get("tejas_captcha_audio_files.oldAudioFileSuffix");
-                    foreach ($extensions as $ext) {
+                // Cleanup old file storage for this session;
+                if( $this->session->has("tejas_captcha_audio_files.oldAudioFileSuffix")) {
 
-                      $processCmd = 'rm ' . $this->osAudioStoragePath . '/' . $this->audioFilePrefix . $this->oldAudioFileSuffix . '.' . $ext;
+					$this->oldAudioFileSuffix = $this->session->get("tejas_captcha_audio_files.oldAudioFileSuffix");
+					foreach ($extensions as $ext) {
 
-                      if(floatval(app()->version()) >= 7.0) {
-                          $process = new Process(preg_split('/\s/', $processCmd));
-                      }else{
-                          $process = new Process($processCmd);
-                      }
-                      $process->run();
-                  }
+					      $processCmd = 'rm ' . $this->osAudioStoragePath . '/' . $this->audioFilePrefix . $this->oldAudioFileSuffix . '.' . $ext;
 
-                  $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
-                } //
+					      if(floatval(app()->version()) >= 7.0) {
+					          $process = new Process(preg_split('/\s/', $processCmd));
+					      }else{
+					          $process = new Process($processCmd);
+					      }
+					      $process->run();
+						}
+                }
 
+                $this->session->put("tejas_captcha_audio_files.oldAudioFileSuffix", $this->audioFileSuffix);
 
                 $this->tts = $this->session->get('tejas_captcha_audio_files.tts');
 
@@ -201,7 +199,8 @@ class TejasCaptchaController extends Controller
                 // executes after the command finishes
                 if (! $process->isSuccessful()) {
                     throw new ProcessFailedException($process);
-                }elseif ($process->isSuccessful()) {
+					var_dump($processCmd); exit;
+                }else{
                     $audiofile = ['audiofile' => $this->session->get('tejas_captcha_audio_files.audioFileSuffix')];
                     $this->session->put('tejas_captcha_params.inprogress', false);
                     return json_encode($audiofile);
@@ -238,10 +237,14 @@ class TejasCaptchaController extends Controller
 
                             $options = Array();
                             $options['path'] = $this->osAudioStoragePath;
-                            $options['filenames'] = $this->audioArray;
-
-                            $this->cleanup->gc($options);
+							// Uncomment line below to force delete all files in the $this->audioArray;
+                            // $options['force_delete_filenames'] = $this->audioArray;
+							//
+							// by default gc deletes files from $this->osAudioStoragePath
+							// : older then 12 seconds : or all files if more then 50 found
+							$this->cleanup->gc($options);
                             $this->audioArray = Array();
+
                             $this->session->put("tejas_captcha_audio_files.audioFileSuffixes", $this->audioArray);
 
                             switch ($id_tokens[1]) {

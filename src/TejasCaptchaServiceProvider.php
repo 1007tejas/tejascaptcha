@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Part of Laravel 5 TejasCaptcha package
+* Part of the Laravel Tejas/TejasCaptTcha package
  *
  * @copyright
  * @version

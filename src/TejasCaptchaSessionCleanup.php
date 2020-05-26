@@ -3,7 +3,7 @@
 namespace Tejas\TejasCaptcha;
 
 /**
- * Part of Laravel TejasCaptcha package
+* Part of the Laravel Tejas/TejasCaptTcha package
  *
  * @copyright
  * @version
@@ -41,16 +41,16 @@ class TejasCaptchaSessionCleanup {
   /**
    * The path where final audio files are stored.
    *
-   * @var string
+   * @var array
    */
-  protected $filenames;
+  protected $force_delete_filenames;
 
   /**
-   * The number of minutes the session audio should be valid.
+   * The number of seconds the session audio should be valid.
    *
    * @var int
    */
-  protected $minutes;
+  protected $seconds;
 
   /**
    * The number of files in the audio directory.
@@ -65,9 +65,9 @@ class TejasCaptchaSessionCleanup {
     public function __construct()
     {
       $this->filesystem = new Filesystem();
-      $this->path = 'var/www/dev.173.255.195.42/resources/audio';
-      $this->filenames = null;
-      $this->minutes = 1;
+      $this->path = 'var/www/dev.173.255.195.42/storage/app/audio';
+      $this->force_delete_filenames = null;
+      $this->seconds = 12;
     }
 
     /**
@@ -77,13 +77,16 @@ class TejasCaptchaSessionCleanup {
     */
     public function gc(array $options = []) {
         $this->path = $options['path'] ?? $this->path;
-        $this->filenames = $options['filenames'] ?? $this->filenames;
+        $this->force_delete_filenames = $options['force_delete_filenames'] ?? $this->force_delete_filenames;
+
+		$testDate = (new \DateTime("{$this->seconds} seconds ago"))->format('r');
+
         try{
             $files = Finder::create()
                         ->in($this->path)
                         ->files()
                         ->ignoreDotFiles(true)
-                        ->date('<= now - '.$this->minutes.' minutes');
+                        ->date("<=" . $testDate);
 
               foreach ($files as $file) {
                   $this->filesystem->delete($file->getRealPath());
@@ -110,11 +113,11 @@ class TejasCaptchaSessionCleanup {
         }
 
 
-        if($this->filenames !== null) {
+        if($this->force_delete_filenames !== null) {
             try{
                 $files = Finder::create()
                             ->in($this->path)
-                            ->name($this->filenames);
+                            ->name($this->force_delete_filenames);
 
                 foreach ($files as $file) {
                     $this->filesystem->delete($file->getRealPath());
@@ -124,7 +127,5 @@ class TejasCaptchaSessionCleanup {
                   LOG::debug('Caught exception: ' . $e->getMessage() . "\n");
               }
           }
-
     }
-
 }

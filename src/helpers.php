@@ -1,5 +1,18 @@
 <?php
 
+
+/**
+* Part of the Laravel Tejas/TejasCaptTcha package
+ *
+ * @copyright
+ * @version
+ * @author Jeff Hallmark
+ * @contact
+ * @web https://github.com/1007tejas/
+ * @date 2019-08-29
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ */
+ 
 if (!function_exists('TejasCaptcha')) {
 
     /**
