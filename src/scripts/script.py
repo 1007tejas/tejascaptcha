@@ -8,7 +8,6 @@ jobQueue = queue.Queue(50)
 # Max audio files in storage/app/audio is 45 * 3 = 135
 # gc will garbage collect by deleting all audio files in the storage/app/audio
 # directory when file count is greater than or equal to 135.
-
 def doCommand(command_line):
 
 	threadLocalData3 = threading.local()

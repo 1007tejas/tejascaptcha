@@ -1,0 +1,52 @@
+.captcha {
+  margin: 1em 0 0 1em;
+}
+.tejas {
+  margin: 0px;
+  color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(0, 0, 32, 0.90);
+  border-radius: .5rem .5rem .5rem .5rem;
+}
+
+.tejas-menu-label  {
+  color: #fff !important;
+  font-family: "Libre Baskerville", sans-serif;
+  font-weight: 200;
+  font-size: 1.12rem;
+}
+
+.menu-button {
+  margin: 1em 0 1em 3em;
+}
+
+.menu-label-input  {
+  font-size: 1.0rem;
+  font-weight: 500;
+  margin: 0 0 1em 1em;
+}
+
+.menu-label-required:before {
+  content: '* ';
+  color: #ff0000;
+  font-weight: 400;
+  font-size: 1.12rem;
+  margin: 0.75rem 0 0.3rem 0 !important;
+}
+
+.sm-bot-pad {
+    padding: 0 0 0.75rem 0;
+}
+
+.small-font {
+  font-size: .7rem !important;
+  padding: 0;
+  margin: 0 0 0 1.5em;
+}
+
+.invalid-form-field-entry {
+  background-color: rgba(200, 0, 0, .75);
+}
+
+.correct-form-field-entry {
+  background-color: rgba(0, 100, 0, .75);
+}

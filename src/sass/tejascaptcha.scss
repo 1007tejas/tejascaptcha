@@ -8,14 +8,19 @@
 
 .tejas-captcha-icon-volume-up,
 .tejas-captcha-icon-sync {
-  margin: 0 !important;
+  margin: 0.95em 0 0 0 !important;
   padding: 0 !important;
-	color: rgba(255, 255, 255, 0.5);
-	background-color: rgba(255, 255, 255, 0.2);
-	font-size: 1.5rem;
-	border-radius: 1rem;
-	box-shadow: 0 0 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 0.5rem;
 }
+.tejas-captcha-icon-volume-up {
+  margin: .25em 0 0 .65em !important;
+}
+
+
 .tejas-captcha-icon-no-pad {
   padding: 0 !important;
 }
