@@ -67,7 +67,7 @@ class TejasCaptchaSessionCleanup {
       $this->filesystem = new Filesystem();
       $this->path = 'var/www/dev.173.255.195.42/storage/app/audio';
       $this->force_delete_filenames = null;
-      $this->seconds = 12;
+      $this->seconds = 30;
     }
 
     /**
@@ -97,16 +97,21 @@ class TejasCaptchaSessionCleanup {
         }
 
         try{
-          $files = Finder::create()
-                      ->in($this->path)
-                      ->files()
-                      ->ignoreDotFiles(true);
+			$files = Finder::create()
+				->in($this->path)
+				->files()
+				->ignoreDotFiles(true);
 
-            if(iterator_count($files) > 50) {
-                foreach ($files as $file) {
-                    $this->filesystem->delete($file->getRealPath());
-                }
-            }
+			// script.py specifies a jobQueue = queue.Queue(50)
+			// But the high water mark is 45, enforced here by TejasCaptchaSessionCleanup.php -> gc
+			// Max audio files in storage/app/audio is 45 * 3 = 135
+			// gc will garbage collect by deleting all audio files in the storage/app/audio
+			// directory when file count is greater than or equal to 135.
+			if(iterator_count($files) >= 135) {
+				foreach ($files as $file) {
+				    $this->filesystem->delete($file->getRealPath());
+				}
+			}
 
         } catch(exception $e){
             LOG::debug('Caught exception: ' . $e->getMessage() . "\n");

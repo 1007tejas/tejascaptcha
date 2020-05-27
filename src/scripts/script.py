@@ -4,6 +4,10 @@ import os, getopt, re, sys, shlex, subprocess
 import queue, threading
 
 jobQueue = queue.Queue(50)
+# High water mark is 45, enforced by TejasCaptchaSessionCleanup.php -> gc
+# Max audio files in storage/app/audio is 45 * 3 = 135
+# gc will garbage collect by deleting all audio files in the storage/app/audio
+# directory when file count is greater than or equal to 135.
 
 def doCommand(command_line):
 
