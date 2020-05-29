@@ -9,7 +9,7 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Session\Store as Session;
 use App\Http\Controllers\Controller;
 
-class TejasCaptcha_Controller_Laravel_Blade extends Controller
+class TejasCaptcha_Controller extends Controller
 {
 
 	/**
@@ -27,7 +27,7 @@ class TejasCaptcha_Controller_Laravel_Blade extends Controller
 	  return view('welcome');
 	}
 
-    public function postTejascaptchaCreate(Request $request)
+    public function tejasCaptcha(Request $request)
 	{
 		if ($request->isMethod('get')) {
 			return Redirect::back()->withInput(Input::all())->response()->json([

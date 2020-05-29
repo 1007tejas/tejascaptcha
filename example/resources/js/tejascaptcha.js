@@ -189,7 +189,7 @@ $( window ).on( "load", function() {
 // To send form via ajax uncomment the following $(document).on('submit', 'form#contact_form' Code and
 // run ' npm run dev '
 
-	// $(document).on('submit', 'form#contact_form', function (event)
+	// $(document).on('submit', 'form#tejascaptcha_form', function (event)
 	// {
 	// 	event.preventDefault();
 	//

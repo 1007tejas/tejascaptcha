@@ -10,7 +10,7 @@ The tejas/tejascaptcha is a service provider for [Laravel](http://www.laravel.co
 * [Compatibility](#compatibility)
 * [Installation](#installation)
      * [Tejas Captcha](#tejas-captcha)
-     * [Tejas Captcha Middleware](#tejas-captcha-middleware)
+     * [Tejas Captcha Middleware - Captcha Verification](#tejas-captcha-middleware---captcha-verification)
      * [Bootstrap - Laravel Installation](#bootstrap---laravel-installation)
      * [Tejas Captcha Makefile - Post Install](#tejas-captcha-makefile---post-install)
      * [Register the Tejas Captcha service provider](#register-the-tejas-captcha-service-provider)
@@ -39,29 +39,25 @@ The tejas/tejascaptcha service provider has been tested with Laravel versions 5,
 
 The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org).
 
-From your projects root directory, open a terminal and run the command `composer require tejas/tejascaptcha`.
+From your projects root directory, open a terminal and run the command
+* `composer require tejas/tejascaptcha`.
 
 ![The composer require cmd image is not available](assets/githubReadme/images/tejasCaptchaComposerRequireCmd.png?raw=true "TejasCaptcha Composer Require Cmd")
 
 
-### Tejas Captcha Middleware ###
+### Tejas Captcha Middleware - Captcha Verification ###
 
 __app/Http/Middleware/VerifyTejasCaptcha.php__
 
 
-There are two middleware files in the tejas/tejascaptcha package.
-
-The first is the stub file, named `VerifyTejasCaptcha.php`, and it is located in the `vendor/tejas/tejascaptcha/src/app/Http/Middleware` folder. Place a copy of this file in your projects `app/Http/Middleware` folder.
+Middleware is used to verify that the captcha was correctly entered.
 
 From your projects root directory, open a terminal and run the command:
-`cp vendor/tejas/tejascaptcha/src/app/Http/Middleware/VerifyTejasCaptcha.php app/Http/Middleware/`.
+* `cp vendor/tejas/tejascaptcha/src/app/Http/Middleware/VerifyTejasCaptcha.php app/Http/Middleware/`.
 
-
-Contents of the stub file:
+This command copies the `VerifyTejasCaptcha.php` middleware stub file to your projects `app/Http/Middleware` folder.
 
 ```
-<?php
-
 namespace App\Http\Middleware;
 
 use Tejas\TejasCaptcha\Http\Middleware\VerifyTejasCaptcha as Middleware;
@@ -78,16 +74,15 @@ class VerifyTejasCaptcha extends Middleware
 ![The tejascaptcha middleware image is not available](assets/githubReadme/images/tejasCaptchaVerifyMiddlewareStub.png?raw=true "TejasCaptcha Middleware")
 
 
- :small_red_triangle:Nothing should be done with the second middleware file.
-
-The second middleware file verifies that the current captcha matches the users response. This file is also named `VerifyTejasCaptcha.php`, but it is located in the `tejas/tejascaptcha/src/Http/Middleware` folder. Nothing should be done with this second middleware file.
-
 __app/Http/Kernel.php__
 
 In the `app/Http/Kernel.php` file at the bottom of the `routeMiddleware` section insert the following line:
 * `'tejascaptcha_verify_captcha' => \App\Http\Middleware\VerifyTejasCaptcha::class,`
 
-![The tejascaptcha middleware Kernel file image is not available](assets/githubReadme/images/tejasCaptchaVerifyMiddlewareKernel.png?raw=true "TejasCaptcha Middleware Kernel file")
+![The tejascaptcha middleware Kernel file image is not available](assets/githubReadme/images/tejasCaptchaMiddlewareKernel.png?raw=true "TejasCaptcha Middleware Kernel file")
+
+
+Use this middleware declaration wherever the tejas/tejascaptcha is included in the Post submission.
 
 __example/routes/web.php__
 
@@ -96,18 +91,10 @@ __example/routes/web.php__
 
 This route is declared in the `example/routes/web.php` file. It is part of the working example files included with the Tejas Captcha package. See example/README.md for implementation details.
 
-`Route::post('tejascaptcha_verify_form', 'TejasCaptcha_Controller_Laravel_Blade@postTejascaptchaCreate')->middleware('tejascaptcha_verify_captcha');`
+#####  Route::post('tejascaptcha_verify_form','TejasCaptcha_Controller@tejasCaptcha')->middleware('tejascaptcha_verify_captcha'); #####
 
 
-![The tejascaptcha Routing image is not available](assets/githubReadme/images/tejascaptchaVerifyRouting.png?raw=true "TejasCaptcha Routing")
-
-__example/resources/js/tejascaptcha.js__
-
-Form submission for Tejas Captcha forms is via Jquery Ajax. The above route `'tejascaptcha_verify_form'` is appended to the Ajax request. See below excerpt from `tejascaptcha.js`
-
-
-![The tejascaptcha Ajax Form Submit image is not available](assets/githubReadme/images/tejascaptchaAjaxFormSubmit.png?raw=true "TejasCaptcha  Form Submit")
-
+![The tejascaptcha Routing image is not available](assets/githubReadme/images/tejasCaptchaMiddlewareRoute.png?raw=true "TejasCaptcha Middleware Route")
 
 ### Bootstrap - Laravel Installation ###
 
@@ -137,7 +124,7 @@ root directory run the following command with one of the specified make actions:
 
 ### Register the Tejas Captcha service provider ###
 
-##### This step is optional, `tejas/tejascaptcha` uses `Composer` `package discovery`. #####
+##### This step is optional - tejas/tejascaptcha is registered automatically by Composer package discovery. #####
 
 __config/app.php__
 
