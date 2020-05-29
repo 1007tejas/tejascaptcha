@@ -298,18 +298,4 @@ class TejasCaptchaController extends Controller
           $this->session->put('tejas_captcha_params.inprogress', false);
           return $result;
       }
-
-      /**
-       * get CAPTCHA api
-       *
-       * @param \TejasCaptcha $tejascaptcha
-       * @param string $config
-       * @return \Intervention\Image\ImageManager->response
-       */
-      public function getCaptchaApi(TejasCaptcha $tejascaptcha, $config = 'null')
-      {
-        $result = $tejascaptcha->create($config);
-        $this->session->put('tejas_captcha_params.inprogress', false);
-        return $result;
-      }
     }

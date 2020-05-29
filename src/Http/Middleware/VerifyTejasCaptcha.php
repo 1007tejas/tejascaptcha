@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use \Illuminate\Http\Request;
 
 /**
- * Laravel 5 TejasCaptcha package
+ * Part of the Laravel Tejas/TejasCaptTcha package
  *
  * @copyright
  * @version
