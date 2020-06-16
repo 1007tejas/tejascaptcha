@@ -40,7 +40,9 @@ The tejas/tejascaptcha service provider has been tested with Laravel versions 5,
 The TejasCaptcha Service Provider is installed via [Composer](http://getcomposer.org).
 
 From your projects root directory, open a terminal and run the command
-* `composer require tejas/tejascaptcha`.
+* `composer require tejas/tejascaptcha`
+* `npm install bootstrap`
+* `npm install @fortawesome/fontawesome-free`
 
 ![The composer require cmd image is not available](assets/githubReadme/images/tejasCaptchaComposerRequireCmd.png?raw=true "TejasCaptcha Composer Require Cmd")
 

@@ -24,7 +24,7 @@ class TejasCaptcha_Controller extends Controller
 
 	public function getHome()
 	{
-	  return view('welcome');
+	  return view('tejascaptcha');
 	}
 
     public function tejasCaptcha(Request $request)
@@ -61,14 +61,14 @@ class TejasCaptcha_Controller extends Controller
 					$validator->errors()->add('captcha_response', 'Captcha Response (required)');
 				}
 				$request->flashExcept('captcha_response');
-				return view('welcome')->withErrors($validator->errors());
+				return view('tejascaptcha')->withErrors($validator->errors());
 
 			}elseif( $request->input('errors')['captcha_response'] ) {
 				$messageBag = new MessageBag($request->input('errors'));
 				$request->flashExcept('captcha_response');
-				return view('welcome')->withErrors($messageBag);
+				return view('tejascaptcha')->withErrors($messageBag);
 			}
 		}
-		return view('welcome');
+		return view('tejascaptcha');
     }
 }
