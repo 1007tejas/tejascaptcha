@@ -23,11 +23,11 @@ def doCommand(command_line):
 	# print(threadLocalData3.response.returncode)
 
 
-def createAudio(audioType, filenameSuffix, osAudioDirectoryTemp, **audioText):
+def createAudio(audioType, osFilename, osAudioDirectoryTemp, **audioText):
 
 	threadLocalData2 = threading.local()
 	threadLocalData2.audioType = audioType
-	threadLocalData2.filenameSuffix = filenameSuffix
+	threadLocalData2.osFilename = osFilename
 	threadLocalData2.audioText = audioText
 	threadLocalData2.osAudioDirectoryTemp = os.path.normpath(osAudioDirectoryTemp)
 
@@ -38,13 +38,13 @@ def createAudio(audioType, filenameSuffix, osAudioDirectoryTemp, **audioText):
 			if e.errno != errno.EEXIST:
 				raise
 
-	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio1']) + '\' -s 155 -p 60 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio1' + threadLocalData2.filenameSuffix+ '.wav')
-	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio2']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio2' + threadLocalData2.filenameSuffix+ '.wav')
-	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio3']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio3' + threadLocalData2.filenameSuffix+ '.wav')
+	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio1']) + '\' -s 155 -p 60 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio1' + threadLocalData2.osFilename+ '.wav')
+	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio2']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio2' + threadLocalData2.osFilename+ '.wav')
+	doCommand('espeak -z -m \'' + str(threadLocalData2.audioText['audio3']) + '\' -s 165 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audio3' + threadLocalData2.osFilename+ '.wav')
 	if 'regularCaptcha' in threadLocalData2.audioType:
-		doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 115 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.filenameSuffix+ '.wav')
+		doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 115 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.osFilename+ '.wav')
 	elif 'mathCaptcha' in threadLocalData2.audioType:
-		doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 145 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.filenameSuffix+ '.wav')
+		doCommand('espeak -m \'' + str(threadLocalData2.audioText['audio4']) + '\' -s 145 -p 40 -v mb-us2  -w ' + threadLocalData2.osAudioDirectoryTemp + '/audioData' + threadLocalData2.osFilename+ '.wav')
 
 
 class ConsumerThread(threading.Thread):
@@ -63,7 +63,8 @@ class ConsumerThread(threading.Thread):
 		threadLocalData1.audioType = None
 		threadLocalData1.audioText = None
 		threadLocalData1.captchaData = None
-		threadLocalData1.filenameSuffix = None
+		threadLocalData1.osFilenamePrefix = None
+		threadLocalData1.osFilename = None
 		threadLocalData1.spacedData = None
 		threadLocalData1.item = None
 		threadLocalData1.f = None
@@ -80,7 +81,8 @@ class ConsumerThread(threading.Thread):
 			threadLocalData1.osAudioStoragePath = os.path.normpath(threadLocalData1.osBasePath + '/' + threadLocalData1.osAudioDirectory)
 
 			threadLocalData1.captchaData = threadLocalData1.item['captchaData']
-			threadLocalData1.filenameSuffix = threadLocalData1.item['filenameSuffix']
+			threadLocalData1.osFilenamePrefix = threadLocalData1.item['osFilenamePrefix']
+			threadLocalData1.osFilename = threadLocalData1.item['osFilename']
 
 			if not os.path.exists(threadLocalData1.osAudioStoragePath):
 				try:
@@ -89,7 +91,8 @@ class ConsumerThread(threading.Thread):
 					if e.errno != errno.EEXIST:
 						raise
 
-			threadLocalData1.osAudioDirectoryTemp = os.path.normpath(threadLocalData1.osAudioStoragePath + '/audio' + threadLocalData1.filenameSuffix)
+			threadLocalData1.osAudioDirectoryTemp = os.path.normpath(threadLocalData1.osAudioStoragePath + '/audio' + threadLocalData1.osFilename)
+
 
 			if not os.path.exists(threadLocalData1.osAudioDirectoryTemp):
 				try:
@@ -97,7 +100,6 @@ class ConsumerThread(threading.Thread):
 				except OSError as e:
 					if e.errno != errno.EEXIST:
 						raise
-
 
 			mathCaptcha = {
 				'audio1' :'What is',
@@ -128,23 +130,23 @@ class ConsumerThread(threading.Thread):
 
 			threadLocalData1.audioText['audio4'] = threadLocalData1.spacedData
 
-			createAudio(threadLocalData1.audioType, threadLocalData1.filenameSuffix, threadLocalData1.osAudioDirectoryTemp, **threadLocalData1.audioText)
+			createAudio(threadLocalData1.audioType, threadLocalData1.osFilename, threadLocalData1.osAudioDirectoryTemp, **threadLocalData1.audioText)
 
-			threadLocalData1.s = "file "+ os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio1' + threadLocalData1.filenameSuffix + '.wav')+"\n"\
-			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audioData' +  threadLocalData1.filenameSuffix +  '.wav')+"\n"\
-			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio2' +  threadLocalData1.filenameSuffix +  '.wav')+"\n"\
-			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audioData' +  threadLocalData1.filenameSuffix +  '.wav')+"\n"\
-			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio3' +  threadLocalData1.filenameSuffix +  '.wav')
+			threadLocalData1.s = "file "+ os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio1' + threadLocalData1.osFilename + '.wav') + "\n"\
+			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audioData' + threadLocalData1.osFilename + '.wav') + "\n"\
+			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio2' + threadLocalData1.osFilename + '.wav') + "\n"\
+			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audioData' + threadLocalData1.osFilename + '.wav') + "\n"\
+			"file " + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/audio3' + threadLocalData1.osFilename + '.wav')
 
-			threadLocalData1.f = open(os.path.normpath(threadLocalData1.osAudioDirectoryTemp +  '/konkat' +  threadLocalData1.filenameSuffix) , 'w+')
+			threadLocalData1.f = open(os.path.normpath(threadLocalData1.osAudioDirectoryTemp +  '/konkat' +  threadLocalData1.osFilename) , 'w+')
 			threadLocalData1.f.write(threadLocalData1.s)
 			threadLocalData1.f.close()
 
-			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp +  '/konkat' +  threadLocalData1.filenameSuffix)+ ' -ar 44100 -ac 2 -ab 192k -f mp3 ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/final' +  threadLocalData1.filenameSuffix + '.mp3'))
-			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp +  '/konkat' +  threadLocalData1.filenameSuffix)+ ' -ar 44100 -ac 2 -ab 192k -f ogg ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/final' +  threadLocalData1.filenameSuffix + '.ogg'))
-			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp +  '/konkat' +  threadLocalData1.filenameSuffix)+ ' ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/final' +  threadLocalData1.filenameSuffix +  '.wav'))
+			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/konkat' + threadLocalData1.osFilename) + ' -ar 44100 -ac 2 -ab 192k -f mp3 ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/' + threadLocalData1.osFilenamePrefix + threadLocalData1.osFilename + '.mp3'))
+			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/konkat' + threadLocalData1.osFilename) + ' -ar 44100 -ac 2 -ab 192k -f ogg ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/' + threadLocalData1.osFilenamePrefix + threadLocalData1.osFilename + '.ogg'))
+			doCommand('ffmpeg -y -safe 0 -f concat -i ' + os.path.normpath(threadLocalData1.osAudioDirectoryTemp + '/konkat' + threadLocalData1.osFilename) + ' ' + os.path.normpath(threadLocalData1.osAudioStoragePath + '/' + threadLocalData1.osFilenamePrefix +  threadLocalData1.osFilename + '.wav'))
 
-			doCommand('rm -r '+threadLocalData1.osAudioDirectoryTemp)
+			doCommand('rm -r ' + threadLocalData1.osAudioDirectoryTemp)
 
 			jobQueue.task_done()
 
@@ -153,11 +155,13 @@ class ConsumerThread(threading.Thread):
 
 def usage():
 	print('''
-Currently accepting 5 arguements and 4 are required [-b, --osBasePath], [-d, --osAudioDirectory], [-c, --captchaData],  [-s, --filenameSuffix] and [-h, --help]
+Currently accepting 6 arguements and 5 are required:
+   *[-b, --osBasePath], *[-d, --osAudioDirectory], *[-c, --captchaData],  *[-p, --osFilenamePrefix],  *[-n, --osFilename] and [-h, --help]
 -b --osBasePath (required) the servers absolute path to the Laravel framework root directory.
 -d --osAudioDirectory (required) path to the audio storage directory starting from the Laravel framework root directory.
 -c --captchadata (required) is the captcha's textual content, excluding white space.
--s --filenameSuffix (required) is a constant string, it is appended to a randomly generated filename.
+-p --osFilenamePrefix (required) is a constant string, it is prefixed to the osFilename.
+-n --osFilename (required) is a constant string, it should be a randomly generated filename.
 -h --help prints this message.
 
 '''
@@ -175,7 +179,8 @@ class ProducerThread(threading.Thread):
 		threadLocalData0.osBasePath = None
 		threadLocalData0.osAudioDirectory = None
 		threadLocalData0.captchaData = None
-		threadLocalData0.filenameSuffix = None
+		threadLocalData0.osFilenamePrefix = None
+		threadLocalData0.osFilename = None
 		threadLocalData0.opts = None
 		threadLocalData0.args = None
 		threadLocalData0.getopt = getopt
@@ -187,7 +192,7 @@ class ProducerThread(threading.Thread):
 		max_worker_threads = 100
 
 		try:	#$text = "-b $this->osBasePath -d $this->osAudioDirectory -c $this->tts -s $this->audioFileSuffix";
-			threadLocalData0.opts, threadLocalData0.args = threadLocalData0.getopt.getopt(sys.argv[1:], "hb:d:c:s:", ["help", "osBasePath=", "osAudioDirectory=", "captchaData=", "filenameSuffix="])
+			threadLocalData0.opts, threadLocalData0.args = threadLocalData0.getopt.getopt(sys.argv[1:], "hb:d:c:p:n:", ["help", "osBasePath=", "osAudioDirectory=", "captchaData=", "osFilenamePrefix=", "osFilename="])
 		except threadLocalData0.getopt.GetoptError as err:
 			# print help information and exit:
 			usage()
@@ -203,30 +208,34 @@ class ProducerThread(threading.Thread):
 				threadLocalData0.osAudioDirectory = threadLocalData0.a
 			elif threadLocalData0.o in ("-c", "--captchaData"):
 				threadLocalData0.captchaData = threadLocalData0.a
-			elif threadLocalData0.o in ("-s", "--filenameSuffix"):
-				threadLocalData0.filenameSuffix = threadLocalData0.a
+			elif threadLocalData0.o in ("-p", "--osFilenamePrefix"):
+				threadLocalData0.osFilenamePrefix = threadLocalData0.a
+			elif threadLocalData0.o in ("-n", "--osFilename"):
+				threadLocalData0.osFilename = threadLocalData0.a
 			elif threadLocalData0.o in ("-h", "--help"):
 				usage()
 				sys.exit()
 			else:
 				assert False, threadLocalData0.o + " unhandled option"
 
-		if threadLocalData0.osBasePath == None or threadLocalData0.osAudioDirectory == None or threadLocalData0.captchaData == None or threadLocalData0.filenameSuffix == None:
+		if threadLocalData0.osBasePath == None or threadLocalData0.osAudioDirectory == None or threadLocalData0.captchaData == None or threadLocalData0.osFilenamePrefix == None or threadLocalData0.osFilename == None:
 			if threadLocalData0.osBasePath == None:
 				threadLocalData0.osBasePath = 'None'
 			if threadLocalData0.osAudioDirectory == None:
 				threadLocalData0.osAudioDirectory = 'None'
 			if threadLocalData0.captchaData == None:
 				threadLocalData0.captchaData = 'None'
-			if threadLocalData0.filenameSuffix == None:
-				threadLocalData0.filenameSuffix ='None'
+			if threadLocalData0.osFilenamePrefix == None:
+				threadLocalData0.osFilenamePrefix ='None'
+			if threadLocalData0.osFilename == None:
+				threadLocalData0.osFilename ='None'
 
-			print('Missing required arguement. b='+threadLocalData0.osBasePath+' d='+threadLocalData0.osAudioDirectory+' c='+threadLocalData0.captchaData+' s='+threadLocalData0.filenameSuffix)
+			print('Missing required arguement. b='+threadLocalData0.osBasePath+' d='+threadLocalData0.osAudioDirectory+' c='+threadLocalData0.captchaData+' n='+threadLocalData0.osFilename)
 			usage()
 			sys.exit()
 
 		if not jobQueue.full():
-			jobQueue.put({'osBasePath':threadLocalData0.osBasePath, 'osAudioDirectory':threadLocalData0.osAudioDirectory, 'captchaData':threadLocalData0.captchaData, 'filenameSuffix':threadLocalData0.filenameSuffix})
+			jobQueue.put({'osBasePath':threadLocalData0.osBasePath, 'osAudioDirectory':threadLocalData0.osAudioDirectory, 'captchaData':threadLocalData0.captchaData, 'osFilenamePrefix':threadLocalData0.osFilenamePrefix, 'osFilename':threadLocalData0.osFilename})
 
 		return
 
